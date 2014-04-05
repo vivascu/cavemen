@@ -4,5 +4,11 @@
     <string name="app_name">cavemen</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="aiddescription">aiddescription</string>
+    <string name="servicedesc">servicedesc</string>
+    <string name="message_console">Message console:</string>
+    <string name="enable_reader_mode">Enable reader mode</string>
+    <string name="disable_reader_mode">Disable reader mode</string>
+    <string name="nfc_mode">NFC mode</string>
 
 </resources>
