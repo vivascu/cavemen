@@ -12,7 +12,6 @@ import com.cavemen.inception.ui.component.FloorListItemComponent_;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +19,17 @@ import java.util.List;
 public class FloorsAdapter extends BaseAdapter {
 
     List<Floor> floors = new ArrayList<Floor>();
+    List<Integer> percentagesOfOccupiedSeats = new ArrayList<Integer>();
 
     @RootContext
     Context context;
 
     public void setFloors(List<Floor> floors) {
         this.floors = floors;
-        notifyDataSetChanged();
+    }
+
+    public void setPercentagesOfOccupiedSeats(List<Integer> percentagesOfOccupiedSeats) {
+        this.percentagesOfOccupiedSeats = percentagesOfOccupiedSeats;
     }
 
     @Override
@@ -57,7 +60,7 @@ public class FloorsAdapter extends BaseAdapter {
         }
         if (position < floors.size()) {
             Floor floor = getItem(position);
-            authorsItemView.bindItem(String.valueOf(floor.getNumber()), floor.percentageOfOccupiedSeats());
+            authorsItemView.bindItem(String.valueOf(floor.getNumber()), percentagesOfOccupiedSeats.get(position));
         }
         return authorsItemView;
     }
