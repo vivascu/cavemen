@@ -60,7 +60,7 @@ public class ProjectsAdapter extends BaseAdapter {
         }
         if (position < projectList.size()) {
             Project proj = getItem(position);
-            projectListItem.bindItem(proj.getTitle());
+            projectListItem.bindItem(proj.getTitle(), proj.getLogoUri());
         }
         return projectListItem;
     }

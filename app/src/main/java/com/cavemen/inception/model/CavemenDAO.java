@@ -8,7 +8,9 @@ import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.cavemen.inception.util.LogUtils.LOGE;
 
@@ -91,5 +93,34 @@ public class CavemenDAO {
             return (int) ((float) (stats[1] + stats[2]) / (stats[0] + stats[1] + stats[2]) * 100);
         }
         return 0;
+    }
+
+    public List<Project> getProjectsForFloor(Floor floor) {
+        List<Project> projects = new ArrayList<Project>();
+        Map<String, Project> projectMap = new HashMap<String, Project>();
+        try {
+            ParseObject floorObject = ParseQuery.getQuery(Floor.TABLE_NAME).get(floor.getFloorId());
+            ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
+            tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floorObject);
+            ParseQuery<ParseObject> usersQuery = ParseQuery.getQuery(Person.TABLE_NAME);
+            usersQuery.whereMatchesKeyInQuery(Person.COLUMN_TABLE_TOKEN, Table.COLUMN_TOKEN, tablesQuery);
+
+            for (ParseObject user : usersQuery.find()) {
+                List<ParseObject> userProjects = user.getRelation(Person.COLUMN_PROJECTS).getQuery().find();
+                for(ParseObject projPO : userProjects) {
+                    Project proj = Project.fromParseObject(projPO);
+                    if (!projectMap.containsKey(proj.getId())) {
+                        projectMap.put(proj.getId(), proj);
+                    }
+                }
+
+            }
+        } catch (ParseException e) {
+            LOGE(CavemenDAO.class.getSimpleName(), e.getMessage(), e);
+        }
+        finally {
+            projects.addAll(projectMap.values());
+        }
+        return projects;
     }
 }
