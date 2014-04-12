@@ -1,31 +1,58 @@
 package com.cavemen.inception.ui.adapter;
 
 import android.content.Context;
-import android.widget.ArrayAdapter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
-import com.cavemen.inception.R;
+import com.cavemen.inception.model.DU;
 
-public class BUnitsAdapter extends ArrayAdapter<String> {
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
 
-    private String[] units;
+import java.util.ArrayList;
+import java.util.List;
 
-    public BUnitsAdapter(Context context) {
-        super(context, android.R.layout.simple_spinner_dropdown_item);
-        units = getContext().getResources().getStringArray(R.array.dus);
+@EBean
+public class BUnitsAdapter extends BaseAdapter {
+
+    private List<DU> dus = new ArrayList<DU>();
+
+    @RootContext
+    Context context;
+
+    public void setDus(List<DU> dus) {
+        this.dus = dus;
+        notifyDataSetChanged();
     }
 
+    @Override
+    public DU getItem(int position) {
+        if (position < dus.size()) {
+            return dus.get(position);
+        }
+        return null;
+    }
 
     @Override
-    public String getItem(int position) {
-        if (position < units.length) {
-            return units[position];
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
         }
-        return "";
+        ((TextView) convertView).setText(getItem(position).getName());
+        return convertView;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return dus.size();
     }
 
 }
