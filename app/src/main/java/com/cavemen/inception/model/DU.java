@@ -1,5 +1,6 @@
 package com.cavemen.inception.model;
 
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
@@ -64,15 +65,18 @@ public class DU {
         return parseObject;
     }
 
-    public static DU fromParseObject(ParseObject parseObject) {
+    public static DU fromParseObject(ParseObject parseObject) throws ParseException {
         DU du = new DU();
         du.name = parseObject.getString(COLUMN_NAME);
         ParseGeoPoint geoPoint = parseObject.getParseGeoPoint(COLUMN_LOCATION);
         du.latitude = geoPoint.getLatitude();
         du.longitude = geoPoint.getLongitude();
         du.floors = new ArrayList<Floor>();
-        for (ParseObject floor : (List<ParseObject>) parseObject.get(COLUMN_FLOORS)) {
-            du.floors.add(Floor.fromParseObject(floor));
+        List<ParseObject> floorObjects = parseObject.getList(COLUMN_FLOORS);
+        if (floorObjects != null) {
+            for (ParseObject floor : floorObjects) {
+                du.floors.add(Floor.fromParseObject(floor.fetchIfNeeded()));
+            }
         }
         return du;
     }
