@@ -1,12 +1,27 @@
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mPager"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.cavemen.inception.ui.MainActivity">
+    android:layout_height="match_parent">
 
-</android.support.v4.view.ViewPager>
+    <android.support.v4.widget.SlidingPaneLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false">
+        <fragment
+            android:name="com.cavemen.inception.ui.fragment.VenueFragment_"
+            android:id="@+id/fragment_venue"
+            android:layout_weight="1"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_listview_with_empty"/>
+        <fragment
+            android:name="com.cavemen.inception.ui.fragment.FloorDescriptionFragment_"
+            android:id="@+id/fragment_floorDesc"
+            android:layout_weight="2"
+            android:layout_width="320dp"
+            android:layout_height="match_parent"
+            tools:layout="@layout/floordesc_fragment_layout"/>
+    </android.support.v4.widget.SlidingPaneLayout>
+
+</RelativeLayout>
