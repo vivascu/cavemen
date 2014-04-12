@@ -3,10 +3,6 @@ package com.cavemen.inception.model;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Represents a floor in a DU's office.
  * <p/>
@@ -43,6 +39,7 @@ public class Floor {
 
     public ParseObject toParseObject() {
         ParseObject parseObject = new ParseObject(TABLE_NAME);
+        parseObject.setObjectId(floorId);
         parseObject.put(COLUMN_NUMBER, number);
         parseObject.put(COLUMN_NAME, name);
         return parseObject;

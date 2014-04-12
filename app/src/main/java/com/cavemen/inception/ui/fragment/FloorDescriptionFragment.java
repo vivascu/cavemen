@@ -121,7 +121,7 @@ public class FloorDescriptionFragment extends Fragment {
 
     @OptionsItem(R.id.action_map)
     public void viewFloorMap() {
-        FloorActivity_.intent(getActivity()).floorId(currentFloor.getFloorId()).start();
+//        FloorActivity_.intent(getActivity()).floorId(currentFloor.getFloorId()).start();
     }
 
 }
