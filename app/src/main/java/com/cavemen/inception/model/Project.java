@@ -16,9 +16,13 @@ public class Project {
     public static final String COLUMN_RESPONSIBLE = "responsibleId";
     public static final String COLUMN_TEAM = "team";
     public static final String COLUMN_TABLES = "tables";
+    public static final String COLUMN_TOKEN = "token";
+    public static final String COLUMN_LOGO_URI = "logoUri";
 
     private String title;
     private String responsibleId;
+    private String token;
+    private String logoUri;
 
     public String getTitle() {
         return title;
@@ -36,10 +40,28 @@ public class Project {
         this.responsibleId = responsibleId;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getLogoUri() {
+        return logoUri;
+    }
+
+    public void setLogoUri(String logoUri) {
+        this.logoUri = logoUri;
+    }
+
     public ParseObject toParseObject() {
         ParseObject parseObject = new ParseObject(TABLE_NAME);
         parseObject.put(COLUMN_TITLE, title);
         parseObject.put(COLUMN_RESPONSIBLE, responsibleId);
+        parseObject.put(COLUMN_TOKEN, token);
+        parseObject.put(COLUMN_LOGO_URI, logoUri);
         return parseObject;
     }
 
@@ -47,6 +69,8 @@ public class Project {
         Project project = new Project();
         project.title = parseObject.getString(COLUMN_TITLE);
         project.responsibleId = parseObject.getString(COLUMN_RESPONSIBLE);
+        project.token = parseObject.getString(COLUMN_TOKEN);
+        project.logoUri = parseObject.getString(COLUMN_LOGO_URI);
         return project;
     }
 }
