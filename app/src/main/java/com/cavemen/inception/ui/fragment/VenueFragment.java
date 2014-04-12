@@ -71,7 +71,7 @@ public class VenueFragment extends Fragment {
         try {
             ParseObject duObject = ParseQuery.getQuery(DU.TABLE_NAME).whereEqualTo(DU.COLUMN_NAME, du.getName()).getFirst();
             ParseQuery<ParseObject> floorsQuery = ParseQuery.getQuery(Floor.TABLE_NAME);
-            floorsQuery.whereEqualTo(Floor.COLUMN_DU, duObject);
+            floorsQuery.whereEqualTo(Floor.COLUMN_DU, duObject).orderByAscending(Floor.COLUMN_NUMBER);
             List<Floor> floors = new ArrayList<Floor>();
             List<Integer> percentages = new ArrayList<Integer>();
             List<ParseObject> floorsPO = floorsQuery.find();

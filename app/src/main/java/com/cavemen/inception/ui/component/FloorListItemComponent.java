@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cavemen.inception.R;
+import com.cavemen.inception.model.Floor;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -33,8 +34,8 @@ public class FloorListItemComponent extends FrameLayout {
     }
 
 
-    public void bindItem(String floorNum, int floorOccupancy) {
-        this.floorNumber.setText(floorNum);
+    public void bindItem(Floor floor, int floorOccupancy) {
+        this.floorNumber.setText("Floor " + floor.getNumber() + " (" + floor.getName() + ")");
         this.floorOccupancy.setText(floorOccupancy + "%");
 
         float occupiedWeight = floorOccupancy / 100.0f;

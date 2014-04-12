@@ -60,7 +60,7 @@ public class FloorsAdapter extends BaseAdapter {
         }
         if (position < floors.size()) {
             Floor floor = getItem(position);
-            authorsItemView.bindItem(String.valueOf(floor.getNumber()), percentagesOfOccupiedSeats.get(position));
+            authorsItemView.bindItem(floor, percentagesOfOccupiedSeats.get(position));
         }
         return authorsItemView;
     }
