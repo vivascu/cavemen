@@ -38,6 +38,11 @@
             android:layout_marginBottom="@dimen/text_vertical_spacing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/text_vertical_spacing"
+            android:background="@color/secondary_gray"/>
         <ListView
             android:id="@+id/projectList"
             android:layout_width="wrap_content"

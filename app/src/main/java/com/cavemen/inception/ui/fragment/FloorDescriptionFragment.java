@@ -23,7 +23,6 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -87,7 +86,7 @@ public class FloorDescriptionFragment extends Fragment {
 
     @Background
     void loadProjectsAndStats(Floor floor) {
-        List<Project> projects = new ArrayList<Project>();
+        List<Project> projects = dao.getProjectsForFloor(floor);
         int[] stats = dao.calculateTableStats(floor);
         populateAdapter(projects, stats);
     }
