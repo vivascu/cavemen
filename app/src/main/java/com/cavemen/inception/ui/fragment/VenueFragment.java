@@ -60,7 +60,6 @@ public class VenueFragment extends Fragment {
 
     public void bindUnit(DU du) {
         //TODO reload adapter with stuff
-        //currentFloorIndex = itemPosition;
         loadFloors(du);
     }
 
@@ -95,7 +94,7 @@ public class VenueFragment extends Fragment {
     public String getCurrentFloor() {
         Floor floor = floorsAdapter.getItem((int) currentFloorIndex);
         if (floor != null) {
-            return String.valueOf(floor.getNumber());
+            return "Floor " + floor.getNumber() + " (" + floor.getName() + ")";
         }
         return "";
     }

@@ -16,6 +16,7 @@
     <string name="free_tbls">Free tables: %s</string>
     <string name="booked_tbls">Booked tables: %s</string>
     <string name="client_logo_desc">Client logo</string>
+    <string name="no_projects_on_floor">No projects on this floor</string>
 
     <array name="dus">
         <item>MDD</item>
