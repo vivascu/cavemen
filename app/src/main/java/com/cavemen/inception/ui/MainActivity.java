@@ -67,7 +67,9 @@ public class MainActivity extends BaseActivity {
         actionBar.setListNavigationCallbacks(adapter, navigationListener);
         loadDUs();
 
-        mFloorDescFragment.setHasOptionsMenu(false);
+        if (slidingPane.isSlideable()) {
+            mFloorDescFragment.setHasOptionsMenu(false);
+        }
         slidingPane.openPane();
         slidingPane.setParallaxDistance(100);
     }
