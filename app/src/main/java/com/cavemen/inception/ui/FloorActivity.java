@@ -1,5 +1,8 @@
 package com.cavemen.inception.ui;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -9,14 +12,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.cavemen.inception.R;
-import com.cavemen.inception.model.CavemenDAO;
+import com.cavemen.inception.model.Floor;
 import com.cavemen.inception.model.Table;
 import com.cavemen.inception.model.TableStatus;
+import com.cavemen.inception.ui.fragment.TableDialogFragment_;
 import com.cavemen.inception.ui.view.TableView;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
@@ -33,11 +39,9 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 @EActivity(R.layout.floor_fragment_layout)
 public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnMatrixChangedListener, View.OnClickListener {
 
+
     @Extra
     String floorId;
-
-    @Bean
-    CavemenDAO dao;
 
     @ViewById(R.id.caveplan)
     ImageView imageView;
@@ -52,14 +56,30 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
 
     @AfterViews
     public void afterView() {
+        Drawable bitmap = getResources().getDrawable(R.drawable.caveplan);
+        imageView.setImageDrawable(bitmap);
+        mAttacher = new PhotoViewAttacher(imageView);
+        mAttacher.setOnMatrixChangeListener(this);
         getTables();
     }
 
     @Background
     public void getTables() {
-        List<Table> tables = dao.getTablesForFloorId(floorId);
-        mTables = tables;
-        drawTables(tables);
+        ParseObject floorObject = null;
+        List<Table> tables = new ArrayList<Table>();
+        try {
+            floorObject = ParseQuery.getQuery(Floor.TABLE_NAME).get(floorId);
+            ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
+            tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floorObject);
+            for (ParseObject table : tablesQuery.find()) {
+                tables.add(Table.fromParseObject(table));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            mTables = tables;
+            drawTables(tables);
+        }
     }
 
     @UiThread
@@ -72,18 +92,9 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        Drawable bitmap = getResources().getDrawable(R.drawable.caveplan);
-        imageView.setImageDrawable(bitmap);
-        mAttacher = new PhotoViewAttacher(imageView);
-        mAttacher.setOnMatrixChangeListener(this);
-
 
     }
+
 
     public void addDeskView(Table table, float imageWidth, int originX, int originY) {
         float ratio;
@@ -143,13 +154,34 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
     public void onClick(View view) {
         if (view instanceof TableView) {
             Table table = (Table) view.getTag();
-            view.setActivated(!view.isActivated());
-            if (view.isActivated()) {
+            if (!view.isActivated()) {
                 if (previouslyActivatedView != null) {
                     previouslyActivatedView.setActivated(false);
                 }
                 previouslyActivatedView = view;
             }
+
+
+            showDialog(table);
+            view.setActivated(!view.isActivated());
+
         }
+    }
+
+    void showDialog(Table table) {
+
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        DialogFragment newFragment = TableDialogFragment_.builder().mTable(table).build();
+        newFragment.show(ft, "dialog");
     }
 }

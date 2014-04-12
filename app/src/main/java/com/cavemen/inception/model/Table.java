@@ -3,6 +3,7 @@ package com.cavemen.inception.model;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * <p/>
  * Created by eandreevici on 4/12/2014.
  */
-public class Table {
+public class Table implements Serializable{
 
     public static final String TABLE_NAME = "Table";
 
@@ -20,6 +21,7 @@ public class Table {
     public static final String COLUMN_X = "x";
     public static final String COLUMN_Y = "y";
     public static final String COLUMN_FLOOR = "floor";
+    private static final long serialVersionUID = -534989159124915806L;
 
     private String id;
     private TableStatus status;
