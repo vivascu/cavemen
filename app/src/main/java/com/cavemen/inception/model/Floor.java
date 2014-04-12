@@ -1,5 +1,6 @@
 package com.cavemen.inception.model;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
@@ -13,7 +14,8 @@ import java.util.List;
  */
 public class Floor {
 
-    private static final String TABLE_NAME = "Floor";
+    public static final String TABLE_NAME = "Floor";
+
     private static final String COLUMN_NUMBER = "number";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_TABLES = "tables";
@@ -54,13 +56,16 @@ public class Floor {
         return parseObject;
     }
 
-    public static Floor fromParseObject(ParseObject parseObject) {
+    public static Floor fromParseObject(ParseObject parseObject) throws ParseException {
         Floor floor = new Floor();
         floor.number = parseObject.getInt(COLUMN_NUMBER);
         floor.name = parseObject.getString(COLUMN_NAME);
         floor.tables = new ArrayList<Table>();
-        for (ParseObject table : (List<ParseObject>) parseObject.get(COLUMN_TABLES)) {
-            floor.tables.add(Table.fromParseObject(table));
+        List<ParseObject> tableObjects = parseObject.getList(COLUMN_TABLES);
+        if (tableObjects != null) {
+            for (ParseObject table : tableObjects) {
+                floor.tables.add(Table.fromParseObject(table.fetchIfNeeded()));
+            }
         }
         return floor;
     }

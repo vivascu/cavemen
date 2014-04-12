@@ -1,5 +1,6 @@
 package com.cavemen.inception.model;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
@@ -53,13 +54,16 @@ public class Table {
         return parseObject;
     }
 
-    public static Table fromParseObject(ParseObject parseObject) {
+    public static Table fromParseObject(ParseObject parseObject) throws ParseException {
         Table table = new Table();
         table.status = TableStatus.values()[parseObject.getInt(COLUMN_STATUS)];
         table.token = parseObject.getString(COLUMN_TOKEN);
         table.employees = new ArrayList<Person>();
-        for (ParseObject person : (List<ParseObject>) parseObject.get(COLUMN_EMPLOYEES)) {
-            table.employees.add(Person.fromParseObject(person));
+        List<ParseObject> employees = parseObject.getList(COLUMN_EMPLOYEES);
+        if (employees != null) {
+            for (ParseObject person : employees) {
+                table.employees.add(Person.fromParseObject(person.fetchIfNeeded()));
+            }
         }
         return table;
     }

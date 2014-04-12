@@ -1,5 +1,6 @@
 package com.cavemen.inception.model;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class Person {
         return parseObject;
     }
 
-    public static Person fromParseObject(ParseObject parseObject) {
+    public static Person fromParseObject(ParseObject parseObject) throws ParseException {
         Person person = new Person();
         person.firstName = parseObject.getString(COLUMN_FNAME);
         person.lastName = parseObject.getString(COLUMN_LNAME);
@@ -95,7 +96,7 @@ public class Person {
         person.photoUri = parseObject.getString(COLUMN_PHOTO_URI);
         person.projects = new ArrayList<Project>();
         for (ParseObject project : (List<ParseObject>) parseObject.get(COLUMN_PROJECTS)) {
-            person.projects.add(Project.fromParseObject(project));
+            person.projects.add(Project.fromParseObject(project.fetchIfNeeded()));
         }
         person.tableToken = parseObject.getString(COLUMN_TABLE_TOKEN);
         return person;
