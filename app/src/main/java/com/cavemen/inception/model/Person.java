@@ -19,6 +19,7 @@ public class Person {
     public static final String COLUMN_PROJECTS = "projects";
     public static final String COLUMN_TABLE_TOKEN = "tableToken";
     public static final String COLUMN_TABLE = "table";
+    public static final String COLUMN_LOGIN = "login";
 
     private String id;
     private String firstName;
@@ -26,6 +27,7 @@ public class Person {
     private String jobTitle;
     private String photoUri;
     private String tableToken;
+    private String login;
 
     public String getFirstName() {
         return firstName;
@@ -67,6 +69,14 @@ public class Person {
         this.tableToken = tableToken;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
     public ParseObject toParseObject() {
         ParseObject parseObject = new ParseObject(TABLE_NAME);
         parseObject.setObjectId(id);
@@ -75,6 +85,7 @@ public class Person {
         parseObject.put(COLUMN_JOB_TITLE, jobTitle);
         parseObject.put(COLUMN_PHOTO_URI, photoUri);
         parseObject.put(COLUMN_TABLE_TOKEN, tableToken);
+        parseObject.put(COLUMN_LOGIN, login);
         return parseObject;
     }
 
@@ -86,6 +97,7 @@ public class Person {
         person.jobTitle = parseObject.getString(COLUMN_JOB_TITLE);
         person.photoUri = parseObject.getString(COLUMN_PHOTO_URI);
         person.tableToken = parseObject.getString(COLUMN_TABLE_TOKEN);
+        person.login = parseObject.getString(COLUMN_LOGIN);
         return person;
     }
 }
