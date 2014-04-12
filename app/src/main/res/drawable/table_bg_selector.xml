@@ -2,9 +2,9 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:app="http://schemas.android.com/apk/res/com.cavemen.inception">
-    <item android:drawable="@drawable/selected_bg" android:state_selected="true" />
+    <item android:drawable="@drawable/selected_bg" android:state_activated="true" />
     <item android:drawable="@drawable/selected_bg" android:state_pressed="true" />
-    <item android:drawable="@drawable/empty_bg" app:state_empty="true" android:state_selected="false" android:state_pressed="false"/>
-    <item android:drawable="@drawable/booked_bg" app:state_booked="true" android:state_selected="false" android:state_pressed="false"/>
-    <item android:drawable="@drawable/occupied_bg" app:state_occupied="true" android:state_selected="false" android:state_pressed="false"/>
+    <item android:drawable="@drawable/empty_bg" app:state_empty="true" android:state_activated="false" android:state_pressed="false"/>
+    <item android:drawable="@drawable/booked_bg" app:state_booked="true" android:state_activated="false" android:state_pressed="false"/>
+    <item android:drawable="@drawable/occupied_bg" app:state_occupied="true" android:state_activated="false" android:state_pressed="false"/>
 </selector>
