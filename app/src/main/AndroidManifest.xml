@@ -22,6 +22,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.FloorActivity_"
+            />
+        <activity
             android:name=".nfc.CavemenNFCReaderActivity"
             android:label="@string/nfc_mode"/>
 
