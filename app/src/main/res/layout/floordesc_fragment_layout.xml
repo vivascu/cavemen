@@ -4,6 +4,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:padding="@dimen/activity_horizontal_margin">
         <TextView
+            android:id="@+id/floorNameField"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/bright_blue"
+            android:layout_marginBottom="@dimen/text_vertical_spacing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+        <TextView
             android:id="@+id/occupiedTablesField"
             android:text="@string/occupied_tbls"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -34,4 +42,9 @@
             android:id="@+id/projectList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <ViewStub
+            android:id="@+id/empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 </LinearLayout>
