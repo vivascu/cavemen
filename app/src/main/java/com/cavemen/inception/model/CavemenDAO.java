@@ -56,31 +56,34 @@ public class CavemenDAO {
         return Collections.emptyList();
     }
 
+    public List<Table> getTablesForFloorId(String floorId) {
+        try {
+            List<Table> tables = new ArrayList<Table>();
+            ParseObject floorObject = ParseQuery.getQuery(Floor.TABLE_NAME).get(floorId);
+            ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
+            tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floorObject);
+            for (ParseObject table : tablesQuery.find()) {
+                tables.add(Table.fromParseObject(table));
+            }
+            return tables;
+        } catch (ParseException e) {
+            LOGE(CavemenDAO.class.getSimpleName(), e.getLocalizedMessage(), e);
+        }
+        return Collections.emptyList();
+    }
+
     public int[] calculateTableStats(Floor floor) {
         try {
-            int empty = 0;
-            int booked = 0;
-            int occupied = 0;
             ParseQuery<ParseObject> floorQuery = ParseQuery.getQuery(Floor.TABLE_NAME);
             floorQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
             ParseObject floorObject = floorQuery.get(floor.getFloorId());
             ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
             tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floorObject);
-//            tablesQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
-            List<Table> tables = new ArrayList<Table>();
-            for (ParseObject table : tablesQuery.find()) {
-                tables.add(Table.fromParseObject(table));
-            }
-            for (Table table : tables) {
-                if (TableStatus.EMPTY.equals(table.getStatus())) {
-                    empty++;
-                } else if (TableStatus.BOOKED.equals(table.getStatus())) {
-                    booked++;
-                } else if (TableStatus.OCCUPIED.equals(table.getStatus())) {
-                    occupied++;
-                }
-            }
-            return new int[]{empty, booked, occupied};
+            return new int[]{
+                    tablesQuery.whereEqualTo(Table.COLUMN_STATUS, TableStatus.EMPTY.ordinal()).count(),
+                    tablesQuery.whereEqualTo(Table.COLUMN_STATUS, TableStatus.BOOKED.ordinal()).count(),
+                    tablesQuery.whereEqualTo(Table.COLUMN_STATUS, TableStatus.OCCUPIED.ordinal()).count()
+            };
         } catch (ParseException e) {
             LOGE(CavemenDAO.class.getSimpleName(), e.getLocalizedMessage(), e);
         }

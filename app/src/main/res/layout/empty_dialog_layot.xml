@@ -15,12 +15,50 @@
         android:text="This table is empty"
         android:textColor="@android:color/white"
         android:textStyle="bold" />
+    <TextView
+        android:layout_below="@+id/dialog_title"
+        android:id="@+id/dialog_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="Choose booking option"
+        android:textColor="#414141"
+        android:textStyle="bold" />
 
     <LinearLayout
+        android:layout_below="@+id/dialog_subtitle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         >
-
+        <ImageView
+            android:padding="4dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_bg"
+            android:layout_width="match_parent"
+            android:src="@drawable/qr"
+            android:scaleType="fitCenter"
+            android:layout_height="64dp"/>
+        <ImageView
+            android:padding="4dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/beacon"
+            android:layout_weight="1"
+            android:background="@drawable/button_bg"
+            android:layout_width="match_parent"
+            android:scaleType="fitCenter"
+            android:layout_height="64dp" />
+        <ImageView
+            android:padding="4dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_bg"
+            android:layout_width="match_parent"
+            android:scaleType="fitCenter"
+            android:layout_height="64dp"
+            android:src="@drawable/keyboard"/>
     </LinearLayout>
 
 </RelativeLayout>
