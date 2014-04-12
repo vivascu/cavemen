@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cavemen.inception.R;
+import com.squareup.picasso.Picasso;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -27,8 +28,8 @@ public class ProjectListItem extends LinearLayout {
         super(context);
     }
 
-    public void bindItem(String title) {
+    public void bindItem(String title, String logoUri) {
         projectNameField.setText(title);
-
+        Picasso.with(this.getContext()).load(logoUri).into(clientLogoImageView);
     }
 }
