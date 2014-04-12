@@ -41,7 +41,7 @@ public class CavemenDAO {
             ParseQuery<ParseObject> floorsQuery = ParseQuery.getQuery(Floor.TABLE_NAME);
             floorsQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
             floorsQuery.whereEqualTo(Floor.COLUMN_DU, duObject);
-            floorsQuery.orderByDescending(Floor.COLUMN_NUMBER);
+            floorsQuery.orderByAscending(Floor.COLUMN_NUMBER);
             List<Floor> floors = new ArrayList<Floor>();
             for (ParseObject floor : floorsQuery.find()) {
                 Floor parsedFloor = Floor.fromParseObject(floor);

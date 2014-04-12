@@ -3,21 +3,17 @@ package com.cavemen.inception.ui;
 import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.support.v4.widget.SlidingPaneLayout;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.events.FloorSelectedEvent;
+import com.cavemen.inception.model.CavemenDAO;
 import com.cavemen.inception.model.DU;
 import com.cavemen.inception.ui.adapter.BUnitsAdapter;
 import com.cavemen.inception.ui.fragment.FloorDescriptionFragment;
 import com.cavemen.inception.ui.fragment.VenueFragment;
 import com.cavemen.inception.util.UIUtils;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -30,7 +26,6 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -38,6 +33,9 @@ import de.greenrobot.event.EventBus;
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.main)
 public class MainActivity extends BaseActivity {
+
+    @Bean
+    CavemenDAO dao;
 
     @Bean
     BUnitsAdapter adapter;
@@ -77,16 +75,7 @@ public class MainActivity extends BaseActivity {
 
     @Background
     void loadDUs() {
-        try {
-            List<DU> result = new ArrayList<DU>();
-            ParseQuery<ParseObject> duQuery = ParseQuery.getQuery(DU.TABLE_NAME);
-            for (ParseObject du : duQuery.find()) {
-                result.add(DU.fromParseObject(du));
-            }
-            populateAdapter(result);
-        } catch (ParseException e) {
-            Log.e(BUnitsAdapter.class.getSimpleName(), e.getLocalizedMessage(), e);
-        }
+        populateAdapter(dao.getDUs());
     }
 
     @UiThread
