@@ -54,6 +54,22 @@ public class CavemenDAO {
         return Collections.emptyList();
     }
 
+    public List<Table> getTablesForFloorId(String floorId) {
+        try {
+            List<Table> tables = new ArrayList<Table>();
+            ParseObject floorObject = ParseQuery.getQuery(Floor.TABLE_NAME).get(floorId);
+            ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
+            tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floorObject);
+            for (ParseObject table : tablesQuery.find()) {
+                tables.add(Table.fromParseObject(table));
+            }
+            return tables;
+        } catch (ParseException e) {
+            LOGE(CavemenDAO.class.getSimpleName(), e.getLocalizedMessage(), e);
+        }
+        return Collections.emptyList();
+    }
+
     public int[] calculateTableStats(Floor floor) {
         try {
             ParseQuery<ParseObject> floorQuery = ParseQuery.getQuery(Floor.TABLE_NAME);

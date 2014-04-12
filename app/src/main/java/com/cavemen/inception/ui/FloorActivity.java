@@ -9,16 +9,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.cavemen.inception.R;
-import com.cavemen.inception.model.Floor;
+import com.cavemen.inception.model.CavemenDAO;
 import com.cavemen.inception.model.Table;
 import com.cavemen.inception.model.TableStatus;
 import com.cavemen.inception.ui.view.TableView;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
@@ -35,9 +33,11 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 @EActivity(R.layout.floor_fragment_layout)
 public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnMatrixChangedListener, View.OnClickListener {
 
-
     @Extra
     String floorId;
+
+    @Bean
+    CavemenDAO dao;
 
     @ViewById(R.id.caveplan)
     ImageView imageView;
@@ -57,26 +57,14 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
 
     @Background
     public void getTables() {
-        ParseObject floorObject = null;
-        List<Table> tables = new ArrayList<Table>();
-        try {
-            floorObject = ParseQuery.getQuery(Floor.TABLE_NAME).get(floorId);
-            ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
-            tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floorObject);
-            for (ParseObject table : tablesQuery.find()) {
-                tables.add(Table.fromParseObject(table));
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } finally {
-            mTables = tables;
-            drawTables(tables);
-        }
+        List<Table> tables = dao.getTablesForFloorId(floorId);
+        mTables = tables;
+        drawTables(tables);
     }
 
     @UiThread
     public void drawTables(List<Table> list) {
-        if(mRect!=null){
+        if (mRect != null) {
             onMatrixChanged(mRect);
         }
     }
@@ -125,8 +113,8 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
         if (container.getChildCount() > mTables.size()) {
             for (int i = 0; i < container.getChildCount(); i++) {
                 View view = container.getChildAt(i);
-                if (view.getId() != R.id.caveplan && view instanceof TableView ) {
-                    updateTablePosition(view,rect.width(), Math.round(rect.centerX() - (rect.width() / 2.0f)), Math.round(rect.centerY() - (rect.height() / 2.0f)));
+                if (view.getId() != R.id.caveplan && view instanceof TableView) {
+                    updateTablePosition(view, rect.width(), Math.round(rect.centerX() - (rect.width() / 2.0f)), Math.round(rect.centerY() - (rect.height() / 2.0f)));
                 }
             }
         } else {
@@ -140,7 +128,8 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
     private void updateTablePosition(View view, float imageWidth, int originX, int originY) {
         TableView tableView = (TableView) view;
         Table table = (Table) tableView.getTag();
-        float ratio =  imageWidth / 1267.0f;;
+        float ratio = imageWidth / 1267.0f;
+        ;
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.width = Math.round(tableView.intialWeight * ratio);
         params.height = Math.round((tableView.intialHeight * ratio));
@@ -152,11 +141,11 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
 
     @Override
     public void onClick(View view) {
-        if(view instanceof TableView){
+        if (view instanceof TableView) {
             Table table = (Table) view.getTag();
             view.setActivated(!view.isActivated());
-            if (view.isActivated()){
-                if (previouslyActivatedView!=null){
+            if (view.isActivated()) {
+                if (previouslyActivatedView != null) {
                     previouslyActivatedView.setActivated(false);
                 }
                 previouslyActivatedView = view;
