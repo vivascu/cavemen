@@ -26,10 +26,12 @@ public class FloorsAdapter extends BaseAdapter {
 
     public void setFloors(List<Floor> floors) {
         this.floors = floors;
+        notifyDataSetChanged();
     }
 
     public void setPercentagesOfOccupiedSeats(List<Integer> percentagesOfOccupiedSeats) {
         this.percentagesOfOccupiedSeats = percentagesOfOccupiedSeats;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -60,7 +62,11 @@ public class FloorsAdapter extends BaseAdapter {
         }
         if (position < floors.size()) {
             Floor floor = getItem(position);
-            authorsItemView.bindItem(String.valueOf(floor.getNumber()), percentagesOfOccupiedSeats.get(position));
+            int occupiedSeats = 0;
+            if (position < percentagesOfOccupiedSeats.size()) {
+                occupiedSeats = percentagesOfOccupiedSeats.get(position);
+            }
+            authorsItemView.bindItem(floor, occupiedSeats);
         }
         return authorsItemView;
     }

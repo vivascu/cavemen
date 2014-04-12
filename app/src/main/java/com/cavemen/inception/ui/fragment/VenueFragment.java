@@ -1,18 +1,17 @@
 package com.cavemen.inception.ui.fragment;
 
 import android.app.Fragment;
+import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.events.FloorSelectedEvent;
+import com.cavemen.inception.model.CavemenDAO;
 import com.cavemen.inception.model.DU;
 import com.cavemen.inception.model.Floor;
-import com.cavemen.inception.model.Table;
-import com.cavemen.inception.model.TableStatus;
 import com.cavemen.inception.ui.adapter.FloorsAdapter;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -28,8 +27,6 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-import static com.cavemen.inception.util.LogUtils.LOGE;
-
 @EFragment(R.layout.fragment_listview_with_empty)
 public class VenueFragment extends Fragment {
 
@@ -42,70 +39,62 @@ public class VenueFragment extends Fragment {
     @Bean
     FloorsAdapter floorsAdapter;
 
+    @Bean
+    CavemenDAO dao;
+
     long currentFloorIndex;
 
     @ViewById
     ListView list;
 
+    @ViewById
+    ProgressBar listProgress;
+
 
     @AfterViews
     public void bindAdapter() {
+        listProgress.setVisibility(View.VISIBLE);
         list.setAdapter(floorsAdapter);
     }
 
 
     public void bindUnit(DU du) {
         //TODO reload adapter with stuff
-        //currentFloorIndex = itemPosition;
         loadFloors(du);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Background
     void loadFloors(DU du) {
-        try {
-            ParseObject duObject = ParseQuery.getQuery(DU.TABLE_NAME).whereEqualTo(DU.COLUMN_NAME, du.getName()).getFirst();
-            ParseQuery<ParseObject> floorsQuery = ParseQuery.getQuery(Floor.TABLE_NAME);
-            floorsQuery.whereEqualTo(Floor.COLUMN_DU, duObject);
-            List<Floor> floors = new ArrayList<Floor>();
-            List<Integer> percentages = new ArrayList<Integer>();
-            for (ParseObject floor : floorsQuery.find()) {
-                floors.add(Floor.fromParseObject(floor));
-                ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
-                tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floor);
-                List<Table> tables = new ArrayList<Table>();
-                for (ParseObject table : tablesQuery.find()) {
-                    tables.add(Table.fromParseObject(table));
-                }
-                percentages.add(percentageOfOccupiedSeats(tables));
-            }
-            populateAdapter(floors, percentages);
-        } catch (ParseException e) {
-            LOGE(VenueFragment.class.getSimpleName(), e.getLocalizedMessage(), e);
+        List<Floor> floors = dao.getFloorsForDU(du);
+        populateFloors(floors);
+        List<Integer> percentages = new ArrayList<Integer>();
+        for (Floor floor : floors) {
+            percentages.add(dao.calculateOccupiedTablesPercentage(floor));
         }
-    }
-
-    public int percentageOfOccupiedSeats(List<Table> tables) {
-        int total = tables.size();
-        int occupied = 0;
-        for (Table table : tables) {
-            if (!table.getStatus().equals(TableStatus.EMPTY)) {
-                occupied++;
-            }
-        }
-        return (int) (((float) occupied / total) * 100);
+        populatePercentages(percentages);
     }
 
     @UiThread
-    void populateAdapter(List<Floor> floors, List<Integer> percentages) {
+    void populateFloors(List<Floor> floors) {
         floorsAdapter.setFloors(floors);
+        listProgress.setVisibility(View.GONE);
+    }
+
+    @UiThread
+    void populatePercentages(List<Integer> percentages) {
         floorsAdapter.setPercentagesOfOccupiedSeats(percentages);
-        floorsAdapter.notifyDataSetChanged();
     }
 
     public String getCurrentFloor() {
         Floor floor = floorsAdapter.getItem((int) currentFloorIndex);
         if (floor != null) {
-            return String.valueOf(floor.getNumber());
+            return "Floor " + floor.getNumber() + " (" + floor.getName() + ")";
         }
         return "";
     }

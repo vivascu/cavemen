@@ -2,21 +2,17 @@ package com.cavemen.inception.ui.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.view.ViewStub;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.events.FloorSelectedEvent;
-import com.cavemen.inception.model.DU;
+import com.cavemen.inception.model.CavemenDAO;
 import com.cavemen.inception.model.Floor;
 import com.cavemen.inception.model.Project;
-import com.cavemen.inception.model.Table;
 import com.cavemen.inception.ui.FloorActivity_;
 import com.cavemen.inception.ui.adapter.ProjectsAdapter;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -32,11 +28,12 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-import static com.cavemen.inception.util.LogUtils.LOGE;
-
 @EFragment(R.layout.floordesc_fragment_layout)
 @OptionsMenu(R.menu.floor_desc_menu)
 public class FloorDescriptionFragment extends Fragment {
+
+    @ViewById
+    TextView floorNameField;
 
     @ViewById
     TextView occupiedTablesField;
@@ -50,7 +47,14 @@ public class FloorDescriptionFragment extends Fragment {
     @ViewById
     ListView projectList;
 
+    @ViewById
+    ViewStub empty;
+
+
     Floor currentFloor;
+
+    @Bean
+    CavemenDAO dao;
 
     @Bean
     ProjectsAdapter projectAdapter;
@@ -58,6 +62,8 @@ public class FloorDescriptionFragment extends Fragment {
     @AfterViews
     public void initAdapter() {
         projectList.setAdapter(projectAdapter);
+        empty.setLayoutResource(R.layout.empty_projects);
+        projectList.setEmptyView(empty);
     }
 
     @Override
@@ -75,48 +81,24 @@ public class FloorDescriptionFragment extends Fragment {
 
     public void onEvent(FloorSelectedEvent event) {
         currentFloor = event.getFloor();
-
-        List<String> projectNames = new ArrayList<String>();
-        projectNames.add("BUPA");
-        projectNames.add("VISA TMS");
-        projectNames.add("Some proj");
-
-        /*String occupiedSeats = getResources().getString(R.string.occupied_tbls, selectedFloor.percentageOfOccupiedSeats());
-        String freeSeats = getResources().getString(R.string.free_tbls, selectedFloor.percentageOfOccupiedSeats());
-        String bookedSeats = getResources().getString(R.string.booked_tbls, selectedFloor.percentageOfOccupiedSeats());
-        occupiedTablesField.setText(occupiedSeats);
-        freeTablesField.setText(freeSeats);
-        bookedTablesField.setText(bookedSeats);*/
-
+        floorNameField.setText("Floor " + currentFloor.getNumber() + " (" + currentFloor.getName() + ")");
+        loadProjectsAndStats(currentFloor);
     }
 
     @Background
-    void loadProjects(Floor floor) {
-        try {
-            ParseObject duObject = ParseQuery.getQuery(DU.TABLE_NAME).whereEqualTo(DU.COLUMN_NAME, floor.getName()).getFirst();
-            ParseQuery<ParseObject> projectQuery = ParseQuery.getQuery(Project.TABLE_NAME);
-            projectQuery.whereEqualTo(Project.COLUMN_TABLES, floor);
-            List<Project> projects = new ArrayList<Project>();
-            for (ParseObject project : projectQuery.find()) {
-                projects.add(Project.fromParseObject(project));
-                ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
-                tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floor);
-                List<Table> tables = new ArrayList<Table>();
-                for (ParseObject table : tablesQuery.find()) {
-                    tables.add(Table.fromParseObject(table));
-                }
-
-            }
-            populateAdapter(projects);
-        } catch (ParseException e) {
-            LOGE(VenueFragment.class.getSimpleName(), e.getLocalizedMessage(), e);
-        }
+    void loadProjectsAndStats(Floor floor) {
+        List<Project> projects = new ArrayList<Project>();
+        int[] stats = dao.calculateTableStats(floor);
+        populateAdapter(projects, stats);
     }
 
     @UiThread
-    void populateAdapter(List<Project> projects) {
+    void populateAdapter(List<Project> projects, int[] stats) {
         projectAdapter.setProjects(projects);
         projectAdapter.notifyDataSetChanged();
+        occupiedTablesField.setText(getResources().getString(R.string.occupied_tbls, stats[2]));
+        freeTablesField.setText(getResources().getString(R.string.free_tbls, stats[0]));
+        bookedTablesField.setText(getResources().getString(R.string.booked_tbls, stats[1]));
     }
 
     @OptionsItem(R.id.action_map)

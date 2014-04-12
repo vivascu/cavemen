@@ -3,10 +3,6 @@ package com.cavemen.inception.model;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Represents an employee.
  * <p/>
@@ -24,6 +20,7 @@ public class Person {
     public static final String COLUMN_TABLE_TOKEN = "tableToken";
     public static final String COLUMN_TABLE = "table";
 
+    private String id;
     private String firstName;
     private String lastName;
     private String jobTitle;
@@ -72,6 +69,7 @@ public class Person {
 
     public ParseObject toParseObject() {
         ParseObject parseObject = new ParseObject(TABLE_NAME);
+        parseObject.setObjectId(id);
         parseObject.put(COLUMN_FNAME, firstName);
         parseObject.put(COLUMN_LNAME, lastName);
         parseObject.put(COLUMN_JOB_TITLE, jobTitle);
@@ -82,6 +80,7 @@ public class Person {
 
     public static Person fromParseObject(ParseObject parseObject) throws ParseException {
         Person person = new Person();
+        person.id = parseObject.getObjectId();
         person.firstName = parseObject.getString(COLUMN_FNAME);
         person.lastName = parseObject.getString(COLUMN_LNAME);
         person.jobTitle = parseObject.getString(COLUMN_JOB_TITLE);
