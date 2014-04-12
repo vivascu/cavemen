@@ -16,14 +16,12 @@ import java.util.List;
 public class DU {
 
     public static final String TABLE_NAME = "DU";
-    private static final String COLUMN_NAME = "name";
-    private static final String COLUMN_LOCATION = "location";
-    private static final String COLUMN_FLOORS = "floors";
+    public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_LOCATION = "location";
 
     private String name;
     private double latitude;
     private double longitude;
-    private List<Floor> floors;
 
     public String getName() {
         return name;
@@ -49,19 +47,10 @@ public class DU {
         this.longitude = longitude;
     }
 
-    public List<Floor> getFloors() {
-        return Collections.unmodifiableList(floors);
-    }
-
-    public void setFloors(List<Floor> floors) {
-        this.floors = new ArrayList<Floor>(floors);
-    }
-
     public ParseObject toParseObject() {
         ParseObject parseObject = new ParseObject(TABLE_NAME);
         parseObject.put(COLUMN_NAME, name);
         parseObject.put(COLUMN_LOCATION, new ParseGeoPoint(latitude, longitude));
-        parseObject.put(COLUMN_FLOORS, floors);
         return parseObject;
     }
 
@@ -71,13 +60,6 @@ public class DU {
         ParseGeoPoint geoPoint = parseObject.getParseGeoPoint(COLUMN_LOCATION);
         du.latitude = geoPoint.getLatitude();
         du.longitude = geoPoint.getLongitude();
-        du.floors = new ArrayList<Floor>();
-        List<ParseObject> floorObjects = parseObject.getList(COLUMN_FLOORS);
-        if (floorObjects != null) {
-            for (ParseObject floor : floorObjects) {
-                du.floors.add(Floor.fromParseObject(floor.fetchIfNeeded()));
-            }
-        }
         return du;
     }
 }

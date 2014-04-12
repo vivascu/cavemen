@@ -14,19 +14,20 @@ import java.util.List;
  */
 public class Person {
 
-    private static final String TABLE_NAME = "Person";
-    private static final String COLUMN_FNAME = "fName";
-    private static final String COLUMN_LNAME = "lName";
-    private static final String COLUMN_JOB_TITLE = "jobTitle";
-    private static final String COLUMN_PHOTO_URI = "photoUri";
-    private static final String COLUMN_PROJECTS = "projects";
-    private static final String COLUMN_TABLE_TOKEN = "tableToken";
+    public static final String TABLE_NAME = "Person";
+
+    public static final String COLUMN_FNAME = "fName";
+    public static final String COLUMN_LNAME = "lName";
+    public static final String COLUMN_JOB_TITLE = "jobTitle";
+    public static final String COLUMN_PHOTO_URI = "photoUri";
+    public static final String COLUMN_PROJECTS = "projects";
+    public static final String COLUMN_TABLE_TOKEN = "tableToken";
+    public static final String COLUMN_TABLE = "table";
 
     private String firstName;
     private String lastName;
     private String jobTitle;
     private String photoUri;
-    private List<Project> projects;
     private String tableToken;
 
     public String getFirstName() {
@@ -61,14 +62,6 @@ public class Person {
         this.photoUri = photoUri;
     }
 
-    public List<Project> getProjects() {
-        return Collections.unmodifiableList(projects);
-    }
-
-    public void setProjects(List<Project> projects) {
-        this.projects = new ArrayList<Project>(projects);
-    }
-
     public String getTableToken() {
         return tableToken;
     }
@@ -83,7 +76,6 @@ public class Person {
         parseObject.put(COLUMN_LNAME, lastName);
         parseObject.put(COLUMN_JOB_TITLE, jobTitle);
         parseObject.put(COLUMN_PHOTO_URI, photoUri);
-        parseObject.put(COLUMN_PROJECTS, projects);
         parseObject.put(COLUMN_TABLE_TOKEN, tableToken);
         return parseObject;
     }
@@ -94,10 +86,6 @@ public class Person {
         person.lastName = parseObject.getString(COLUMN_LNAME);
         person.jobTitle = parseObject.getString(COLUMN_JOB_TITLE);
         person.photoUri = parseObject.getString(COLUMN_PHOTO_URI);
-        person.projects = new ArrayList<Project>();
-        for (ParseObject project : (List<ParseObject>) parseObject.get(COLUMN_PROJECTS)) {
-            person.projects.add(Project.fromParseObject(project.fetchIfNeeded()));
-        }
         person.tableToken = parseObject.getString(COLUMN_TABLE_TOKEN);
         return person;
     }

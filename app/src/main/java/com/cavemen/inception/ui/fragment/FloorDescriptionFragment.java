@@ -8,19 +8,31 @@ import android.widget.TextView;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.events.FloorSelectedEvent;
+import com.cavemen.inception.model.DU;
 import com.cavemen.inception.model.Floor;
+import com.cavemen.inception.model.Project;
+import com.cavemen.inception.model.Table;
 import com.cavemen.inception.ui.FloorActivity_;
+import com.cavemen.inception.ui.adapter.ProjectsAdapter;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+
+import static com.cavemen.inception.util.LogUtils.LOGE;
 
 @EFragment(R.layout.floordesc_fragment_layout)
 @OptionsMenu(R.menu.floor_desc_menu)
@@ -38,11 +50,14 @@ public class FloorDescriptionFragment extends Fragment {
     @ViewById
     ListView projectList;
 
-    ArrayAdapter<String> projectAdapter;
+    Floor currentFloor;
+
+    @Bean
+    ProjectsAdapter projectAdapter;
 
     @AfterViews
-    public void afterViews() {
-        projectAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1);
+    public void initAdapter() {
+        projectList.setAdapter(projectAdapter);
     }
 
     @Override
@@ -59,20 +74,54 @@ public class FloorDescriptionFragment extends Fragment {
     }
 
     public void onEvent(FloorSelectedEvent event) {
-        Floor selectedFloor = event.getFloor();
+        currentFloor = event.getFloor();
+
         List<String> projectNames = new ArrayList<String>();
         projectNames.add("BUPA");
         projectNames.add("VISA TMS");
         projectNames.add("Some proj");
-        projectAdapter.clear();
-        projectAdapter.addAll(projectNames);
-        projectList.setAdapter(projectAdapter);
 
+        /*String occupiedSeats = getResources().getString(R.string.occupied_tbls, selectedFloor.percentageOfOccupiedSeats());
+        String freeSeats = getResources().getString(R.string.free_tbls, selectedFloor.percentageOfOccupiedSeats());
+        String bookedSeats = getResources().getString(R.string.booked_tbls, selectedFloor.percentageOfOccupiedSeats());
+        occupiedTablesField.setText(occupiedSeats);
+        freeTablesField.setText(freeSeats);
+        bookedTablesField.setText(bookedSeats);*/
+
+    }
+
+    @Background
+    void loadProjects(Floor floor) {
+        try {
+            ParseObject duObject = ParseQuery.getQuery(DU.TABLE_NAME).whereEqualTo(DU.COLUMN_NAME, floor.getName()).getFirst();
+            ParseQuery<ParseObject> projectQuery = ParseQuery.getQuery(Project.TABLE_NAME);
+            projectQuery.whereEqualTo(Project.COLUMN_TABLES, floor);
+            List<Project> projects = new ArrayList<Project>();
+            for (ParseObject project : projectQuery.find()) {
+                projects.add(Project.fromParseObject(project));
+                ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
+                tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floor);
+                List<Table> tables = new ArrayList<Table>();
+                for (ParseObject table : tablesQuery.find()) {
+                    tables.add(Table.fromParseObject(table));
+                }
+
+            }
+            populateAdapter(projects);
+        } catch (ParseException e) {
+            LOGE(VenueFragment.class.getSimpleName(), e.getLocalizedMessage(), e);
+        }
+    }
+
+    @UiThread
+    void populateAdapter(List<Project> projects) {
+        projectAdapter.setProjects(projects);
+        projectAdapter.notifyDataSetChanged();
     }
 
     @OptionsItem(R.id.action_map)
     public void viewFloorMap() {
-        FloorActivity_.intent(getActivity()).start();
+        FloorActivity_.intent(getActivity()).floorId(currentFloor.getFloorId()).start();
     }
 
 }

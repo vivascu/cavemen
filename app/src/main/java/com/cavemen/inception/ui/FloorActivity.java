@@ -13,6 +13,7 @@ import com.cavemen.inception.ui.view.TableView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -22,6 +23,10 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 @EActivity(R.layout.floor_fragment_layout)
 public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnMatrixChangedListener {
+
+
+    @Extra
+    String floorId;
 
     @ViewById(R.id.Table)
     TableView mTableView;
