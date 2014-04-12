@@ -3,23 +3,34 @@ package com.cavemen.inception.ui;
 import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.events.FloorSelectedEvent;
+import com.cavemen.inception.model.DU;
 import com.cavemen.inception.ui.adapter.BUnitsAdapter;
 import com.cavemen.inception.ui.fragment.FloorDescriptionFragment;
 import com.cavemen.inception.ui.fragment.VenueFragment;
 import com.cavemen.inception.util.UIUtils;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -27,6 +38,7 @@ import de.greenrobot.event.EventBus;
 @OptionsMenu(R.menu.main)
 public class MainActivity extends BaseActivity {
 
+    @Bean
     BUnitsAdapter adapter;
 
     @FragmentById(R.id.fragment_venue)
@@ -43,22 +55,41 @@ public class MainActivity extends BaseActivity {
 
     @AfterViews
     public void afterViews() {
-        adapter = new BUnitsAdapter(this);
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         ActionBar.OnNavigationListener navigationListener = new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                mVenueFragment.bindUnit(itemPosition);
+                mVenueFragment.bindUnit(adapter.getItem(itemPosition));
                 return false;
             }
         };
         actionBar.setListNavigationCallbacks(adapter, navigationListener);
-        mVenueFragment.bindUnit(0);
+        loadDUs();
 
         mFloorDescFragment.setHasOptionsMenu(false);
         slidingPane.openPane();
         slidingPane.setParallaxDistance(100);
+    }
+
+    @Background
+    void loadDUs() {
+        try {
+            List<DU> result = new ArrayList<DU>();
+            ParseQuery<ParseObject> duQuery = ParseQuery.getQuery(DU.TABLE_NAME);
+            for (ParseObject du : duQuery.find()) {
+                result.add(DU.fromParseObject(du));
+            }
+            populateAdapter(result);
+        } catch (ParseException e) {
+            Log.e(BUnitsAdapter.class.getSimpleName(), e.getLocalizedMessage(), e);
+        }
+    }
+
+    @UiThread
+    void populateAdapter(List<DU> dus) {
+        adapter.setDus(dus);
+        mVenueFragment.bindUnit(dus.get(0));
     }
 
     @Override
@@ -77,6 +108,7 @@ public class MainActivity extends BaseActivity {
         slidingPane.setPanelSlideListener(slidingPaneListener);
         getFragmentManager().addOnBackStackChangedListener(backStackListener);
     }
+
     @Override
     protected void onPause() {
         super.onPause();

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class DU {
 
-    private static final String TABLE_NAME = "DU";
+    public static final String TABLE_NAME = "DU";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_LOCATION = "location";
     private static final String COLUMN_FLOORS = "floors";

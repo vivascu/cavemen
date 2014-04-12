@@ -5,6 +5,7 @@ import android.widget.ListView;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.events.FloorSelectedEvent;
+import com.cavemen.inception.model.DU;
 import com.cavemen.inception.model.Floor;
 import com.cavemen.inception.ui.adapter.FloorsAdapter;
 
@@ -41,14 +42,14 @@ public class VenueFragment extends Fragment {
     }
 
 
-    public void bindUnit(int itemPosition) {
+    public void bindUnit(DU du) {
         //TODO reload adapter with stuff
-        currentFloorIndex = itemPosition;
-        floorsAdapter.loadFloorsForVenue(itemPosition);
+//        currentFloorIndex = itemPosition;
+        floorsAdapter.setFloors(du.getFloors());
     }
 
     public String getCurrentFloor() {
-        return (String) floorsAdapter.getItem((int) currentFloorIndex);
+        return String.valueOf(floorsAdapter.getItem((int) currentFloorIndex).getNumber());
     }
 
 
@@ -56,7 +57,7 @@ public class VenueFragment extends Fragment {
     public void listItemClicked(int position) {
         // Notify the parent activity of selected item
         currentFloorIndex = position;
-        EventBus.getDefault().post(new FloorSelectedEvent(new Floor()));
+        EventBus.getDefault().post(new FloorSelectedEvent(floorsAdapter.getItem(position)));
         // Set the item as checked to be highlighted
         floorsAdapter.notifyDataSetChanged();
     }
