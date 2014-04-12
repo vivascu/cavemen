@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity {
         actionBar.setListNavigationCallbacks(adapter, navigationListener);
         mVenueFragment.bindUnit(0);
 
+        mFloorDescFragment.setHasOptionsMenu(false);
         slidingPane.openPane();
         slidingPane.setParallaxDistance(100);
     }
@@ -142,20 +143,22 @@ public class MainActivity extends BaseActivity {
 
 
     private void updateActionBarWithoutLandingNavigation() {
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        mVenueFragment.setHasOptionsMenu(false);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        mFloorDescFragment.setHasOptionsMenu(true);
         String floorNumber = mVenueFragment.getCurrentFloor();
-        getActionBar().setTitle(floorNumber.equals("") ? mAppName : floorNumber);
+        actionBar.setTitle(floorNumber.equals("") ? mAppName : floorNumber);
     }
 
     private void updateActionBarWithHomeBackNavigation() {
-        getActionBar().setDisplayHomeAsUpEnabled(false);
-        getActionBar().setHomeButtonEnabled(false);
-        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        mVenueFragment.setHasOptionsMenu(true);
-        getActionBar().setTitle(mAppName);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        mFloorDescFragment.setHasOptionsMenu(false);
+        actionBar.setTitle(mAppName);
     }
 
 

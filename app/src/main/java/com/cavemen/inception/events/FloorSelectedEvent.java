@@ -1,6 +1,16 @@
 package com.cavemen.inception.events;
 
+import com.cavemen.inception.model.Floor;
+
 public class FloorSelectedEvent {
-    public FloorSelectedEvent(long currentFloorIndex) {
+
+    private Floor floor;
+
+    public FloorSelectedEvent(Floor currentFloorIndex) {
+        floor = currentFloorIndex;
+    }
+
+    public Floor getFloor() {
+        return floor;
     }
 }

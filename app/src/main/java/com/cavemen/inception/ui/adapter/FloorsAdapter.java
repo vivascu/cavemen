@@ -35,10 +35,9 @@ public class FloorsAdapter extends BaseAdapter {
     @AfterInject
     void initAdapter() {
         floorsQuery = ParseQuery.getQuery(Floor.TABLE_NAME);
-        reloadFloors();
     }
 
-    public void loadFloorsForVenue(int floor) {
+    public void loadFloorsForVenue(int venue) {
 
     }
 
@@ -62,10 +61,7 @@ public class FloorsAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (floors != null) {
-            return floors.size();
-        }
-        return 0;
+        return floors.size();
     }
 
     @Override

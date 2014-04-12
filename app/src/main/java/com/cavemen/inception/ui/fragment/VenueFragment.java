@@ -5,6 +5,7 @@ import android.widget.ListView;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.events.FloorSelectedEvent;
+import com.cavemen.inception.model.Floor;
 import com.cavemen.inception.ui.adapter.FloorsAdapter;
 
 import org.androidannotations.annotations.AfterViews;
@@ -55,7 +56,7 @@ public class VenueFragment extends Fragment {
     public void listItemClicked(int position) {
         // Notify the parent activity of selected item
         currentFloorIndex = position;
-        EventBus.getDefault().post(new FloorSelectedEvent(currentFloorIndex));
+        EventBus.getDefault().post(new FloorSelectedEvent(new Floor()));
         // Set the item as checked to be highlighted
         floorsAdapter.notifyDataSetChanged();
     }
