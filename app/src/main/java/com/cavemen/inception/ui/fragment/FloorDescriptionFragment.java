@@ -64,6 +64,7 @@ public class FloorDescriptionFragment extends Fragment {
         projectNames.add("BUPA");
         projectNames.add("VISA TMS");
         projectNames.add("Some proj");
+        projectAdapter.clear();
         projectAdapter.addAll(projectNames);
         projectList.setAdapter(projectAdapter);
 
