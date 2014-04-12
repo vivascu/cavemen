@@ -70,7 +70,7 @@ public class FloorsAdapter extends BaseAdapter {
             authorsItemView = (FloorListItemComponent) convertView;
         }
         if (position < floors.size()) {
-            authorsItemView.bindItem(floors.get(position), position * 10);
+            authorsItemView.bindItem(floors.get(position), (position + 5) * 10);
         }
         return authorsItemView;
     }

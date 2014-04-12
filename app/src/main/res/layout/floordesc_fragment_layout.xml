@@ -7,5 +7,5 @@
         android:id="@+id/venue_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test2"/>
+        android:text="@string/view_floor_map"/>
 </LinearLayout>
