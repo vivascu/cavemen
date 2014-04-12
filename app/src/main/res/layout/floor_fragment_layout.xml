@@ -12,11 +12,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="Cave Plan"
-        android:src="@drawable/caveplan_half" />
-
-    <com.cavemen.inception.ui.view.TableView
-        android:id="@+id/Table"
-        android:layout_width="90px"
-        android:layout_height="150px"
-        android:background="@drawable/table_bg_selector" />
+        android:src="@drawable/caveplan" />
 </FrameLayout>
