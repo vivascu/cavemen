@@ -1,6 +1,7 @@
 package com.cavemen.inception.ui.fragment;
 
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -64,6 +65,12 @@ public class VenueFragment extends Fragment {
         //TODO reload adapter with stuff
         //currentFloorIndex = itemPosition;
         loadFloors(du);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Background
