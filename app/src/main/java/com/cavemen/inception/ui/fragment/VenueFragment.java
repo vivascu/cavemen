@@ -44,12 +44,15 @@ public class VenueFragment extends Fragment {
 
     public void bindUnit(DU du) {
         //TODO reload adapter with stuff
-//        currentFloorIndex = itemPosition;
         floorsAdapter.setFloors(du.getFloors());
     }
 
     public String getCurrentFloor() {
-        return String.valueOf(floorsAdapter.getItem((int) currentFloorIndex).getNumber());
+        Floor floor = floorsAdapter.getItem((int) currentFloorIndex);
+        if (floor != null) {
+            return String.valueOf(floor.getNumber());
+        }
+        return "";
     }
 
 

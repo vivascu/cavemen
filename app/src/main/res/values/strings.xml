@@ -12,6 +12,10 @@
     <string name="view_floor_map">View in floor map</string>
     <string name="project_label_text">Projects:</string>
     <string name="action_floor_map">View floor map</string>
+    <string name="occupied_tbls">Occupied tables: %s</string>
+    <string name="free_tbls">Free tables: %s</string>
+    <string name="booked_tbls">Booked tables: %s</string>
+    <string name="client_logo_desc">Client logo</string>
 
     <array name="dus">
         <item>MDD</item>

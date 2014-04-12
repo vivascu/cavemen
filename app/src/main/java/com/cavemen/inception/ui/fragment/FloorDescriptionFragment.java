@@ -67,6 +67,10 @@ public class FloorDescriptionFragment extends Fragment {
         projectAdapter.clear();
         projectAdapter.addAll(projectNames);
         projectList.setAdapter(projectAdapter);
+        String occupiedSeats = getResources().getString(R.string.occupied_tbls, selectedFloor.percentageOfOccupiedSeats());
+        String freeSeats = getResources().getString(R.string.free_tbls, selectedFloor.percentageOfOccupiedSeats());
+        String bookedSeats = getResources().getString(R.string.booked_tbls, selectedFloor.percentageOfOccupiedSeats());
+        occupiedTablesField.setText("O");
 
     }
 
