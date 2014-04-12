@@ -38,9 +38,9 @@ dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
     compile 'de.greenrobot:eventbus:2.2.0'
+    compile 'com.github.chrisbanes.photoview:library:1.2.2'
+
 }
-
-
 apt {
     arguments {
         androidManifestFile variant.processResources.manifestFile

@@ -10,13 +10,13 @@
         android:required="false"/>
 
     <application
-        android:name=".CavemenApplication"
+        android:name="com.cavemen.inception.CavemenApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity_"
+            android:name="com.cavemen.inception.ui.MainActivity_"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -24,14 +24,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.FloorActivity_"
+            android:name="com.cavemen.inception.ui.FloorActivity_"
             />
         <activity
-            android:name=".nfc.CavemenNFCReaderActivity"
+            android:name="com.cavemen.inception.nfc.CavemenNFCReaderActivity"
             android:label="@string/nfc_mode"/>
 
         <service
-            android:name=".nfc.CavemenHostApduService"
+            android:name="com.cavemen.inception.nfc.CavemenHostApduService"
             android:exported="true"
             android:permission="android.permission.BIND_NFC_SERVICE">
             <intent-filter>

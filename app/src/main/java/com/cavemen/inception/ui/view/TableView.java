@@ -1,6 +1,7 @@
 package com.cavemen.inception.ui.view;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
 
@@ -40,6 +41,11 @@ public class TableView extends ImageButton {
 
     public TableView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
 
     @Override
