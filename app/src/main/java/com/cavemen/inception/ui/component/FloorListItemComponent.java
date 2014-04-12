@@ -1,7 +1,10 @@
 package com.cavemen.inception.ui.component;
 
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cavemen.inception.R;
@@ -18,6 +21,12 @@ public class FloorListItemComponent extends FrameLayout {
     @ViewById
     TextView floorOccupancy;
 
+    @ViewById
+    View occupancyMeter;
+
+    @ViewById
+    View freeMeter;
+
 
     public FloorListItemComponent(Context context) {
         super(context);
@@ -27,5 +36,12 @@ public class FloorListItemComponent extends FrameLayout {
     public void bindItem(String floorNum, int floorOccupancy) {
         this.floorNumber.setText(floorNum);
         this.floorOccupancy.setText(floorOccupancy + "%");
+
+        float occupiedWeight = floorOccupancy / 100.0f;
+        float freeWeight = 1 - (floorOccupancy / 100.0f);
+        occupancyMeter.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, freeWeight));
+        freeMeter.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, occupiedWeight));
     }
+
+
 }

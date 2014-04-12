@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:padding="@dimen/default_grid_margin">
+    android:layout_width="match_parent" android:layout_height="50dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/occupancyMeter"
+            android:background="@color/orange_active"
+            android:layout_width="0dp"
+            android:layout_weight="0.6"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/freeMeter"
+            android:layout_width="0dp"
+            android:layout_weight="0.4"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/floorNumber"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="?android:attr/textColorPrimary"
         android:layout_toLeftOf="@+id/floorOccupancy"
         android:layout_alignParentLeft="true"
+        android:padding="@dimen/default_grid_margin"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true" />
     <TextView
         android:id="@+id/floorOccupancy"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:padding="@dimen/default_grid_margin"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>
