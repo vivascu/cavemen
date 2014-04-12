@@ -3,6 +3,7 @@ package com.cavemen.inception.ui.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -45,6 +46,9 @@ public class VenueFragment extends Fragment {
     long currentFloorIndex;
 
     @ViewById
+    ViewStub empty;
+
+    @ViewById
     ListView list;
 
     @ViewById
@@ -54,12 +58,15 @@ public class VenueFragment extends Fragment {
     @AfterViews
     public void bindAdapter() {
         listProgress.setVisibility(View.VISIBLE);
+        empty.setLayoutResource(R.layout.empty_floors);
+        list.setEmptyView(empty);
         list.setAdapter(floorsAdapter);
     }
 
 
     public void bindUnit(DU du) {
-        //TODO reload adapter with stuff
+        floorsAdapter.setFloors(new ArrayList<Floor>());
+        listProgress.setVisibility(View.VISIBLE);
         loadFloors(du);
     }
 

@@ -17,6 +17,8 @@
     <string name="booked_tbls">Booked tables: %s</string>
     <string name="client_logo_desc">Client logo</string>
     <string name="no_projects_on_floor">No projects on this floor</string>
+    <string name="no_floors_for_venue">Please wait, we are build your building</string>
+    <string name="cavemen_logo">Cavemen LOGO</string>
 
     <array name="dus">
         <item>MDD</item>
