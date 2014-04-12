@@ -48,6 +48,17 @@ public class Floor {
         this.tables = new ArrayList<Table>(tables);
     }
 
+    public int percentageOfOccupiedSeats() {
+        int total = tables.size();
+        int occupied = 0;
+        for (Table table : tables) {
+            if (!table.getStatus().equals(TableStatus.EMPTY)) {
+                occupied++;
+            }
+        }
+        return (int) (((float) occupied / total) * 100);
+    }
+
     public ParseObject toParseObject() {
         ParseObject parseObject = new ParseObject(TABLE_NAME);
         parseObject.put(COLUMN_NUMBER, number);
