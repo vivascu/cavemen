@@ -56,7 +56,7 @@ public class VenueFragment extends Fragment {
 
     public void bindUnit(DU du) {
         //TODO reload adapter with stuff
-//        currentFloorIndex = itemPosition;
+        //currentFloorIndex = itemPosition;
         loadFloors(du);
     }
 

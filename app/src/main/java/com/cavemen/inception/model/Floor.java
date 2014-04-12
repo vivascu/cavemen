@@ -19,9 +19,11 @@ public class Floor {
     public static final String COLUMN_NUMBER = "number";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_DU = "du";
+    public static final String COLUMN_ID = "objectId";
 
     private int number;
     private String name;
+    private String floorId;
 
     public int getNumber() {
         return number;
@@ -50,6 +52,11 @@ public class Floor {
         Floor floor = new Floor();
         floor.number = parseObject.getInt(COLUMN_NUMBER);
         floor.name = parseObject.getString(COLUMN_NAME);
+        floor.floorId = parseObject.getObjectId();
         return floor;
+    }
+
+    public String getFloorId() {
+        return floorId;
     }
 }
