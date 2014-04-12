@@ -9,6 +9,4 @@
     <color name="orange_active">#ff9c00</color>
     <color name="pressed_si">#CC33B5E5</color>
     <color name="bright_blue">#33B5E5</color>
-    <!-- Use Gingerbread-orange -->
-    <color name="fp_selection_background_color">#FEBB20</color>
 </resources>
