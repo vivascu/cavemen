@@ -76,14 +76,11 @@ public class FloorDescriptionFragment extends Fragment {
     public void onEvent(FloorSelectedEvent event) {
         currentFloor = event.getFloor();
 
-        List<String> projectNames = new ArrayList<String>();
-        projectNames.add("BUPA");
-        projectNames.add("VISA TMS");
-        projectNames.add("Some proj");
+        loadProjects(currentFloor);
 
-        /*String occupiedSeats = getResources().getString(R.string.occupied_tbls, selectedFloor.percentageOfOccupiedSeats());
-        String freeSeats = getResources().getString(R.string.free_tbls, selectedFloor.percentageOfOccupiedSeats());
-        String bookedSeats = getResources().getString(R.string.booked_tbls, selectedFloor.percentageOfOccupiedSeats());
+        /*getResources().getString(R.string.occupied_tbls, selectedFloor.percentageOfOccupiedSeats());
+        getResources().getString(R.string.free_tbls, selectedFloor.percentageOfOccupiedSeats());
+        getResources().getString(R.string.booked_tbls, selectedFloor.percentageOfOccupiedSeats());
         occupiedTablesField.setText(occupiedSeats);
         freeTablesField.setText(freeSeats);
         bookedTablesField.setText(bookedSeats);*/
@@ -92,10 +89,11 @@ public class FloorDescriptionFragment extends Fragment {
 
     @Background
     void loadProjects(Floor floor) {
-        try {
-            ParseObject duObject = ParseQuery.getQuery(DU.TABLE_NAME).whereEqualTo(DU.COLUMN_NAME, floor.getName()).getFirst();
+        /*try {
+
+            ParseObject projectObject = ParseQuery.getQuery(DU.TABLE_NAME).whereEqualTo(DU.COLUMN_NAME, floor.getName()).getFirst();
             ParseQuery<ParseObject> projectQuery = ParseQuery.getQuery(Project.TABLE_NAME);
-            projectQuery.whereEqualTo(Project.COLUMN_TABLES, floor);
+
             List<Project> projects = new ArrayList<Project>();
             for (ParseObject project : projectQuery.find()) {
                 projects.add(Project.fromParseObject(project));
@@ -110,7 +108,7 @@ public class FloorDescriptionFragment extends Fragment {
             populateAdapter(projects);
         } catch (ParseException e) {
             LOGE(VenueFragment.class.getSimpleName(), e.getLocalizedMessage(), e);
-        }
+        }*/
     }
 
     @UiThread
