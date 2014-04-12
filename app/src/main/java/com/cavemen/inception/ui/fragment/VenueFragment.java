@@ -1,7 +1,9 @@
 package com.cavemen.inception.ui.fragment;
 
 import android.app.Fragment;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.events.FloorSelectedEvent;
@@ -47,9 +49,13 @@ public class VenueFragment extends Fragment {
     @ViewById
     ListView list;
 
+    @ViewById
+    ProgressBar listProgress;
+
 
     @AfterViews
     public void bindAdapter() {
+        listProgress.setVisibility(View.VISIBLE);
         list.setAdapter(floorsAdapter);
     }
 
@@ -68,7 +74,8 @@ public class VenueFragment extends Fragment {
             floorsQuery.whereEqualTo(Floor.COLUMN_DU, duObject);
             List<Floor> floors = new ArrayList<Floor>();
             List<Integer> percentages = new ArrayList<Integer>();
-            for (ParseObject floor : floorsQuery.find()) {
+            List<ParseObject> floorsPO = floorsQuery.find();
+            for (ParseObject floor : floorsPO) {
                 floors.add(Floor.fromParseObject(floor));
                 ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
                 tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floor);
@@ -97,6 +104,7 @@ public class VenueFragment extends Fragment {
 
     @UiThread
     void populateAdapter(List<Floor> floors, List<Integer> percentages) {
+        listProgress.setVisibility(View.GONE);
         floorsAdapter.setFloors(floors);
         floorsAdapter.setPercentagesOfOccupiedSeats(percentages);
         floorsAdapter.notifyDataSetChanged();
