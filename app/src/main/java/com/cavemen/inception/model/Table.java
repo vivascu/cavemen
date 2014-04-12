@@ -21,10 +21,15 @@ public class Table {
     public static final String COLUMN_Y = "y";
     public static final String COLUMN_FLOOR = "floor";
 
+    private String id;
     private TableStatus status;
     private String token;
     private int x;
     private int y;
+
+    public String getId() {
+        return id;
+    }
 
     public TableStatus getStatus() {
         return status;
@@ -60,6 +65,7 @@ public class Table {
 
     public ParseObject toParseObject() {
         ParseObject parseObject = new ParseObject(TABLE_NAME);
+        parseObject.setObjectId(id);
         parseObject.put(COLUMN_STATUS, status.ordinal());
         parseObject.put(COLUMN_TOKEN, token);
         parseObject.put(COLUMN_X, x);
@@ -69,6 +75,7 @@ public class Table {
 
     public static Table fromParseObject(ParseObject parseObject) throws ParseException {
         Table table = new Table();
+        table.id = parseObject.getObjectId();
         table.status = TableStatus.values()[parseObject.getInt(COLUMN_STATUS)];
         table.token = parseObject.getString(COLUMN_TOKEN);
         table.x = parseObject.getInt(COLUMN_X);
