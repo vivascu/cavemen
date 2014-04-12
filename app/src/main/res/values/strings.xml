@@ -10,5 +10,6 @@
     <string name="enable_reader_mode">Enable reader mode</string>
     <string name="disable_reader_mode">Disable reader mode</string>
     <string name="nfc_mode">NFC mode</string>
+    <string name="working_in_reader_mode">Working in reader mode now</string>
 
 </resources>

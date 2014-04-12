@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="@dimen/activity_vertical_margin"
-              tools:context="com.cavemen.inception.nfc.CavemenNFCReaderActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_vertical_margin"
+    tools:context="com.cavemen.inception.nfc.CavemenNFCReaderActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/message_console"
         android:textAppearance="?android:textAppearanceLarge"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/console"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
-        tools:text="Message sent: Hey\nMessage received: Hey"/>
+        tools:text="Message sent: Hey\nMessage received: Hey" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"/>
-
-    <Button
-        android:id="@+id/toggle_nfc_mode"
+    <TextView
+        android:id="@+id/reader_mode_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?android:borderlessButtonStyle"
-        android:text="@string/enable_reader_mode"
-        android:onClick="toggleReaderMode"/>
+        android:text="@string/working_in_reader_mode"
+        android:gravity="center_vertical"
+        android:drawableLeft="@android:drawable/ic_menu_info_details"
+        android:drawablePadding="4dp" />
 
 </LinearLayout>
