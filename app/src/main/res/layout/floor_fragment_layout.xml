@@ -1,31 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
 
-    <ScrollView
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/table_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/caveplan"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:contentDescription="Cave Plan"
+        android:src="@drawable/caveplan_half" />
 
-        <FrameLayout
-            android:id="@+id/table_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/caveplan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Cave Plan"
-                android:src="@drawable/caveplan" />
-
-            <com.cavemen.inception.ui.view.TableView
-                android:id="@+id/Table"
-                android:layout_width="90px"
-                android:layout_height="150px"
-                android:background="@drawable/table_bg_selector" />
-        </FrameLayout>
-    </ScrollView>
-
-</HorizontalScrollView>
+    <com.cavemen.inception.ui.view.TableView
+        android:id="@+id/Table"
+        android:layout_width="90px"
+        android:layout_height="150px"
+        android:background="@drawable/table_bg_selector" />
+</FrameLayout>
