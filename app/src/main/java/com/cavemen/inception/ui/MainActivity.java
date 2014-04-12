@@ -6,6 +6,7 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.events.FloorSelectedEvent;
@@ -50,6 +51,9 @@ public class MainActivity extends BaseActivity {
     @ViewById(R.id.fragment_container)
     SlidingPaneLayout slidingPane;
 
+    @ViewById
+    ProgressBar listProgress;
+
     @StringRes(R.string.app_name)
     String mAppName;
 
@@ -65,9 +69,12 @@ public class MainActivity extends BaseActivity {
             }
         };
         actionBar.setListNavigationCallbacks(adapter, navigationListener);
+        listProgress.setVisibility(View.VISIBLE);
         loadDUs();
 
-        mFloorDescFragment.setHasOptionsMenu(false);
+        if (slidingPane.isSlideable()) {
+            mFloorDescFragment.setHasOptionsMenu(false);
+        }
         slidingPane.openPane();
         slidingPane.setParallaxDistance(100);
     }
@@ -88,6 +95,7 @@ public class MainActivity extends BaseActivity {
 
     @UiThread
     void populateAdapter(List<DU> dus) {
+        listProgress.setVisibility(View.GONE);
         adapter.setDus(dus);
         mVenueFragment.bindUnit(dus.get(0));
     }

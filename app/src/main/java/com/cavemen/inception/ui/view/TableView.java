@@ -10,6 +10,9 @@ import com.cavemen.inception.R;
  * Created by vivascu on 4/12/2014.
  */
 public class TableView extends ImageButton {
+    public static final int intialHeight = 75 ;
+    public static final int intialWeight = 45;
+
     boolean isEmpty;
     boolean isBooked;
     boolean isOccupied;

@@ -32,4 +32,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center" />
+
+    <ProgressBar
+        android:id="@+id/listProgress"
+        android:visibility="gone"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/progress_top_margin" />
+
 </RelativeLayout>
