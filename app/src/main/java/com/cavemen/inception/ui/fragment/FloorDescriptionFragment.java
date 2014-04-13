@@ -111,9 +111,9 @@ public class FloorDescriptionFragment extends Fragment {
         contentContainer.setVisibility(View.VISIBLE);
         projectAdapter.setProjects(projects);
         projectAdapter.notifyDataSetChanged();
-        occupiedTablesField.setText(getResources().getString(R.string.occupied_tbls, stats[2]));
-        freeTablesField.setText(getResources().getString(R.string.free_tbls, stats[0]));
-        bookedTablesField.setText(getResources().getString(R.string.booked_tbls, stats[1]));
+        occupiedTablesField.setText(stats[2]);
+        freeTablesField.setText(stats[0]);
+        bookedTablesField.setText(stats[1]);
     }
 
     @OptionsItem(R.id.action_map)
