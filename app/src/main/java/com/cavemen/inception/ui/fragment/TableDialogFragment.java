@@ -51,14 +51,15 @@ public class TableDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int layoutID =  R.layout.empty_dialog_layot;;
-        if(mTable.getStatus().equals(TableStatus.EMPTY)){
+        int layoutID = R.layout.empty_dialog_layot;
+        ;
+        if (mTable.getStatus().equals(TableStatus.EMPTY)) {
             layoutID = R.layout.empty_dialog_layot;
         }
-        if(mTable.getStatus().equals(TableStatus.BOOKED)){
+        if (mTable.getStatus().equals(TableStatus.BOOKED)) {
             layoutID = R.layout.booked_dialog_layout;
         }
-        if(mTable.getStatus().equals(TableStatus.OCCUPIED)){
+        if (mTable.getStatus().equals(TableStatus.OCCUPIED)) {
             layoutID = R.layout.occupied_dialog_layout;
         }
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -67,15 +68,17 @@ public class TableDialogFragment extends DialogFragment {
     }
 
     @AfterViews
-    public void afterViews(){
-        mFullName.setText(mPerson.getFirstName()+ " " + mPerson.getLastName());
-        mPhone.setText(mPerson.getPhone());
-        mManager.setText(mPerson.getLineManager());
-        mGender.setText(mPerson.getGender());
-        mEmail.setText(mPerson.getEmail());
-        mBirthday.setText(mPerson.getBirthday());
-        mJobTitle.setText(mPerson.getJobTitle());
-        Picasso.with(getActivity()).load(mPerson.getPhotoUri()).into(imageView);
+    public void afterViews() {
+        if (!mTable.getStatus().equals(TableStatus.EMPTY)) {
+            mFullName.setText(mPerson.getFirstName() + " " + mPerson.getLastName());
+            mPhone.setText(mPerson.getPhone());
+            mManager.setText(mPerson.getLineManager());
+            mGender.setText(mPerson.getGender());
+            mEmail.setText(mPerson.getEmail());
+            mBirthday.setText(mPerson.getBirthday());
+            mJobTitle.setText(mPerson.getJobTitle());
+            Picasso.with(getActivity()).load(mPerson.getPhotoUri()).into(imageView);
+        }
     }
 
     @Override
