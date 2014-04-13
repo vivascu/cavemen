@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cavemen.inception.R;
@@ -23,6 +24,9 @@ public class FloorListItemComponent extends FrameLayout {
     TextView floorOccupancy;
 
     @ViewById
+    ProgressBar floorOccupancySpinner;
+
+    @ViewById
     View occupancyMeter;
 
     @ViewById
@@ -31,17 +35,23 @@ public class FloorListItemComponent extends FrameLayout {
 
     public FloorListItemComponent(Context context) {
         super(context);
+        this.setBackgroundResource(R.drawable.floor_selector);
     }
 
 
     public void bindItem(Floor floor, int floorOccupancy) {
         this.floorNumber.setText("Floor " + floor.getNumber() + " (" + floor.getName() + ")");
-        this.floorOccupancy.setText(floorOccupancy + "%");
+        if (floorOccupancy >= 0) {
+            this.floorOccupancySpinner.setVisibility(INVISIBLE);
+            this.floorOccupancy.setVisibility(VISIBLE);
 
-        float occupiedWeight = floorOccupancy / 100.0f;
-        float freeWeight = 1 - (floorOccupancy / 100.0f);
-        occupancyMeter.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, freeWeight));
-        freeMeter.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, occupiedWeight));
+            this.floorOccupancy.setText(floorOccupancy + "%");
+
+            float occupiedWeight = floorOccupancy / 100.0f;
+            float freeWeight = 1 - (floorOccupancy / 100.0f);
+            occupancyMeter.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, freeWeight));
+            freeMeter.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, occupiedWeight));
+        }
     }
 
 

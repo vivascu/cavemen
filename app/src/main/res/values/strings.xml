@@ -10,13 +10,15 @@
     <string name="disable_reader_mode">Disable reader mode</string>
     <string name="nfc_mode">NFC mode</string>
     <string name="view_floor_map">View in floor map</string>
-    <string name="project_label_text">Projects:</string>
+    <string name="project_label_text">Projects</string>
     <string name="action_floor_map">View floor map</string>
-    <string name="occupied_tbls">Occupied tables: %s</string>
-    <string name="free_tbls">Free tables: %s</string>
-    <string name="booked_tbls">Booked tables: %s</string>
+    <string name="occupied_tbls">Occupied tables: </string>
+    <string name="free_tbls">Free tables:</string>
+    <string name="booked_tbls">Booked tables: </string>
     <string name="client_logo_desc">Client logo</string>
     <string name="no_projects_on_floor">No projects on this floor</string>
+    <string name="no_floors_for_venue">Please wait, we are build your building</string>
+    <string name="cavemen_logo">Cavemen LOGO</string>
 
     <array name="dus">
         <item>MDD</item>

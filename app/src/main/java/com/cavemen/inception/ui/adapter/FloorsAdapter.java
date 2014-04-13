@@ -62,7 +62,7 @@ public class FloorsAdapter extends BaseAdapter {
         }
         if (position < floors.size()) {
             Floor floor = getItem(position);
-            int occupiedSeats = 0;
+            int occupiedSeats = -1;
             if (position < percentagesOfOccupiedSeats.size()) {
                 occupiedSeats = percentagesOfOccupiedSeats.get(position);
             }

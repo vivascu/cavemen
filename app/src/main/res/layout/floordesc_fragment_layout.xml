@@ -1,55 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:padding="@dimen/activity_horizontal_margin">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/plain_white"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <ImageView
+        android:id="@+id/cavemanLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/cavemen_logo"
+        android:layout_gravity="center" />
+
+    <LinearLayout
+        android:id="@+id/contentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/default_grid_margin"
+        android:visibility="gone">
+
         <TextView
             android:id="@+id/floorNameField"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/bright_blue"
-            android:layout_marginBottom="@dimen/text_vertical_spacing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
-        <TextView
-            android:id="@+id/occupiedTablesField"
-            android:text="@string/occupied_tbls"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/text_vertical_spacing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/bright_blue"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_grid_margin"
+            android:layout_marginBottom="@dimen/default_grid_margin"
+            android:background="@color/holo_blue_light">
+
+            <TextView
+                android:text="@string/occupied_tbls"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/plain_white"
+                android:textStyle="bold"
+                android:layout_weight="3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/occupiedTablesField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/plain_white"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="right" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_grid_margin"
+            android:layout_marginBottom="@dimen/default_grid_margin"
+            android:background="@color/holo_blue_light">
+
+            <TextView
+                android:text="@string/free_tbls"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/plain_white"
+                android:textStyle="bold"
+                android:layout_weight="3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/freeTablesField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/plain_white"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="right" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_grid_margin"
+            android:layout_marginBottom="@dimen/default_grid_margin"
+            android:background="@color/holo_blue_light">
+
+            <TextView
+                android:text="@string/booked_tbls"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/plain_white"
+                android:textStyle="bold"
+                android:layout_weight="3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/bookedTablesField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/plain_white"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="right" />
+        </LinearLayout>
+
         <TextView
-            android:text="@string/free_tbls"
-            android:id="@+id/freeTablesField"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/text_vertical_spacing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:text="@string/booked_tbls"
-            android:id="@+id/bookedTablesField"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginBottom="@dimen/text_vertical_spacing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
             android:text="@string/project_label_text"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginBottom="@dimen/text_vertical_spacing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/bright_blue"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/text_vertical_spacing"
-            android:background="@color/secondary_gray"/>
+            android:background="@color/light_gray" />
+
         <ListView
             android:id="@+id/projectList"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <ViewStub
             android:id="@+id/empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-</LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

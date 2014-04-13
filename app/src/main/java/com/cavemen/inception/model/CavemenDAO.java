@@ -1,5 +1,6 @@
 package com.cavemen.inception.model;
 
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -125,5 +126,19 @@ public class CavemenDAO {
             projects.addAll(projectMap.values());
         }
         return projects;
+    }
+
+    public List<Person> getPersonsForTable(Table table) {
+        List<Person> persons = new ArrayList<Person>();
+        try {
+            ParseQuery<ParseObject> usersQuery = ParseQuery.getQuery(Person.TABLE_NAME);
+            usersQuery.whereEqualTo(Person.COLUMN_TABLE_TOKEN, table.getToken());
+            for (ParseObject user : usersQuery.find()) {
+                persons.add(Person.fromParseObject(user));
+            }
+        } catch (ParseException e) {
+            LOGE(CavemenDAO.class.getSimpleName(), e.getMessage(), e);
+        }
+        return persons;
     }
 }

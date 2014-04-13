@@ -1,8 +1,12 @@
 package com.cavemen.inception.ui.fragment;
 
 import android.app.Fragment;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewStub;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,6 +36,12 @@ import de.greenrobot.event.EventBus;
 public class FloorDescriptionFragment extends Fragment {
 
     @ViewById
+    ImageView cavemanLogo;
+
+    @ViewById
+    LinearLayout contentContainer;
+
+    @ViewById
     TextView floorNameField;
 
     @ViewById
@@ -49,7 +59,6 @@ public class FloorDescriptionFragment extends Fragment {
     @ViewById
     ViewStub empty;
 
-
     Floor currentFloor;
 
     @Bean
@@ -63,6 +72,8 @@ public class FloorDescriptionFragment extends Fragment {
         projectList.setAdapter(projectAdapter);
         empty.setLayoutResource(R.layout.empty_projects);
         projectList.setEmptyView(empty);
+        cavemanLogo.setBackgroundResource(R.drawable.caveman_progress);
+        ((AnimationDrawable)cavemanLogo.getBackground()).start();
     }
 
     @Override
@@ -79,6 +90,9 @@ public class FloorDescriptionFragment extends Fragment {
     }
 
     public void onEvent(FloorSelectedEvent event) {
+        cavemanLogo.setVisibility(View.VISIBLE);
+        ((AnimationDrawable)cavemanLogo.getBackground()).start();
+        contentContainer.setVisibility(View.GONE);
         currentFloor = event.getFloor();
         floorNameField.setText("Floor " + currentFloor.getNumber() + " (" + currentFloor.getName() + ")");
         loadProjectsAndStats(currentFloor);
@@ -93,11 +107,13 @@ public class FloorDescriptionFragment extends Fragment {
 
     @UiThread
     void populateAdapter(List<Project> projects, int[] stats) {
+        cavemanLogo.setVisibility(View.GONE);
+        contentContainer.setVisibility(View.VISIBLE);
         projectAdapter.setProjects(projects);
         projectAdapter.notifyDataSetChanged();
-        occupiedTablesField.setText(getResources().getString(R.string.occupied_tbls, stats[2]));
-        freeTablesField.setText(getResources().getString(R.string.free_tbls, stats[0]));
-        bookedTablesField.setText(getResources().getString(R.string.booked_tbls, stats[1]));
+        occupiedTablesField.setText(String.valueOf(stats[2]));
+        freeTablesField.setText(String.valueOf(stats[0]));
+        bookedTablesField.setText(String.valueOf(stats[1]));
     }
 
     @OptionsItem(R.id.action_map)

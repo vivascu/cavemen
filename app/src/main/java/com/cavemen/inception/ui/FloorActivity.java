@@ -3,25 +3,25 @@ package com.cavemen.inception.ui;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.model.CavemenDAO;
+import com.cavemen.inception.model.Floor;
 import com.cavemen.inception.model.Person;
 import com.cavemen.inception.model.Table;
 import com.cavemen.inception.model.TableStatus;
 import com.cavemen.inception.ui.fragment.TableDialogFragment_;
 import com.cavemen.inception.ui.view.TableView;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import org.androidannotations.annotations.AfterViews;
@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.keyboardsurfer.android.widget.crouton.Configuration;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -58,6 +59,8 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
 
     @ViewById(R.id.caveplan)
     ImageView imageView;
+    @ViewById(R.id.progress)
+    ProgressBar progressBar;
     @ViewById(R.id.table_container)
     FrameLayout container;
     PhotoViewAttacher mAttacher;
@@ -72,13 +75,26 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
         imageView.setImageDrawable(bitmap);
         mAttacher = new PhotoViewAttacher(imageView);
         mAttacher.setOnMatrixChangeListener(this);
+        progressBar.setVisibility(View.VISIBLE);
+
+        processPush(getIntent(), false);
         getTables();
     }
 
     @Background
     public void getTables() {
-        if (floorId != null) {
-            List<Table> tables = dao.getTablesForFloorId(floorId);
+        ParseObject floorObject = null;
+        List<Table> tables = new ArrayList<Table>();
+        try {
+            floorObject = ParseQuery.getQuery(Floor.TABLE_NAME).get(floorId);
+            ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
+            tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floorObject);
+            for (ParseObject table : tablesQuery.find()) {
+                tables.add(Table.fromParseObject(table));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
             mTables = tables;
             drawTables(tables);
         }
@@ -86,16 +102,17 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
 
     @UiThread
     public void drawTables(List<Table> list) {
+        progressBar.setVisibility(View.GONE);
         if (mRect != null) {
             onMatrixChanged(mRect);
         }
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        processPush(getIntent(), false);
-    }
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        processPush(getIntent(), false);
+//        super.onCreate(savedInstanceState);
+//    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -130,7 +147,9 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
     @Background
     void fetchNewTableData(TableStatus newTableStatus, String personId) {
         try {
-            Person person = Person.fromParseObject(ParseQuery.getQuery(Person.TABLE_NAME).get(personId));
+            ParseQuery<ParseObject> personQuery = ParseQuery.getQuery(Person.TABLE_NAME);
+            personQuery.whereEqualTo(Person.COLUMN_LOGIN, personId);
+            Person person = Person.fromParseObject(personQuery.getFirst());
             if (TableStatus.EMPTY.equals(newTableStatus)) {
                 displayTableChanged(String.format("%s %s has just released a table!", person.getFirstName(), person.getLastName()), R.color.status_empty);
             } else if (TableStatus.BOOKED.equals(newTableStatus)) {
@@ -147,6 +166,7 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
     void displayTableChanged(String message, int colorResId) {
         Style.Builder builder = new Style.Builder();
         builder.setBackgroundColor(colorResId);
+        builder.setConfiguration(new Configuration.Builder().setDuration(Configuration.DURATION_LONG).build());
         Crouton.makeText(this, message, builder.build()).show();
     }
 
@@ -179,6 +199,11 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
             for (int i = 0; i < container.getChildCount(); i++) {
                 View view = container.getChildAt(i);
                 if (view.getId() != R.id.caveplan && view instanceof TableView) {
+                    TableView tableView = (TableView) view;
+                    Table table = (Table) tableView.getTag();
+                    tableView.setEmpty(table.getStatus().equals(TableStatus.EMPTY));
+                    tableView.setBooked(table.getStatus().equals(TableStatus.BOOKED));
+                    tableView.setOccupied(table.getStatus().equals(TableStatus.OCCUPIED));
                     updateTablePosition(view, rect.width(), Math.round(rect.centerX() - (rect.width() / 2.0f)), Math.round(rect.centerY() - (rect.height() / 2.0f)));
                 }
             }
@@ -194,6 +219,7 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
         TableView tableView = (TableView) view;
         Table table = (Table) tableView.getTag();
         float ratio = imageWidth / 1267.0f;
+        ;
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.width = Math.round(tableView.intialWeight * ratio);
         params.height = Math.round((tableView.intialHeight * ratio));
@@ -213,12 +239,46 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
                 }
                 previouslyActivatedView = view;
             }
-
-
-            showDialog(table);
+            if (!TableStatus.EMPTY.equals(table.getStatus())) {
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.bringToFront();
+                getPerson(table);
+            } else {
+                showDialog(table);
+            }
             view.setActivated(!view.isActivated());
 
         }
+    }
+
+    @Background
+    public void getPerson(Table table) {
+        List<Person> persons = dao.getPersonsForTable(table);
+        if (!persons.isEmpty()) {
+            showPersonDialog(persons.get(0), table);
+        } else {
+            table.setStatus(TableStatus.EMPTY);
+            noPersonsFound(table);
+        }
+    }
+
+    @UiThread
+    public void noPersonsFound(Table table) {
+        progressBar.setVisibility(View.GONE);
+        showDialog(table);
+    }
+
+    @UiThread
+    public void showPersonDialog(Person person, Table table) {
+        progressBar.setVisibility(View.GONE);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        DialogFragment newFragment = TableDialogFragment_.builder().mTable(table).mPerson(person).build();
+        newFragment.show(ft, "dialog");
     }
 
     void showDialog(Table table) {
@@ -236,13 +296,5 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
         // Create and show the dialog.
         DialogFragment newFragment = TableDialogFragment_.builder().mTable(table).build();
         newFragment.show(ft, "dialog");
-    }
-
-    public class UpdatesReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            LOGD(UpdatesReceiver.class.getSimpleName(), "got update!");
-        }
     }
 }
