@@ -11,4 +11,8 @@
     <color name="orange_active">#ff9c00</color>
     <color name="pressed_si">#CC33B5E5</color>
     <color name="bright_blue">#33B5E5</color>
+
+    <color name="status_empty">#669900</color>
+    <color name="status_booked">#FF8800</color>
+    <color name="status_occupied">#0099CC</color>
 </resources>
