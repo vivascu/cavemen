@@ -131,9 +131,8 @@ public class CavemenDAO {
     public List<Person> getPersonsForTable(Table table) {
         List<Person> persons = new ArrayList<Person>();
         try {
-            ParseObject tableObject = ParseQuery.getQuery(Floor.TABLE_NAME).get(table.getId());
             ParseQuery<ParseObject> usersQuery = ParseQuery.getQuery(Person.TABLE_NAME);
-            usersQuery.whereEqualTo(Person.COLUMN_TABLE, tableObject);
+            usersQuery.whereEqualTo(Person.COLUMN_TABLE_TOKEN, table.getToken());
             for (ParseObject user : usersQuery.find()) {
                 persons.add(Person.fromParseObject(user));
             }
