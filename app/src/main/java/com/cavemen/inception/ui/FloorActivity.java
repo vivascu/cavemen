@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,11 +16,13 @@ import android.widget.ImageView;
 
 import com.cavemen.inception.R;
 import com.cavemen.inception.model.CavemenDAO;
+import com.cavemen.inception.model.Person;
 import com.cavemen.inception.model.Table;
 import com.cavemen.inception.model.TableStatus;
 import com.cavemen.inception.ui.fragment.TableDialogFragment_;
 import com.cavemen.inception.ui.view.TableView;
-import com.parse.ParsePush;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -36,9 +37,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 import static com.cavemen.inception.util.LogUtils.LOGD;
+import static com.cavemen.inception.util.LogUtils.LOGE;
 
 /**
  * Created by vivascu on 4/12/2014.
@@ -73,9 +77,11 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
 
     @Background
     public void getTables() {
-        List<Table> tables = dao.getTablesForFloorId(floorId);
-        mTables = tables;
-        drawTables(tables);
+        if (floorId != null) {
+            List<Table> tables = dao.getTablesForFloorId(floorId);
+            mTables = tables;
+            drawTables(tables);
+        }
     }
 
     @UiThread
@@ -88,7 +94,58 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().getAction() != null) {
+            processPush(getIntent());
+        }
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        LOGD(FloorActivity.class.getSimpleName(), "got updated");
+        processPush(intent);
+    }
+
+    private void processPush(Intent intent) {
+        try {
+            JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
+            floorId = json.getString("floorId");
+            String personId = json.getString("personId");
+            TableStatus newTableStatus = TableStatus.values()[json.getInt("tableStatus")];
+            fetchNewTableData(newTableStatus, personId);
+            for (int i = 0; i < container.getChildCount(); i++) {
+                View view = container.getChildAt(i);
+                if (view.getId() != R.id.caveplan && view instanceof TableView) {
+                    container.removeView(view);
+                }
+            }
+            getTables();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Background
+    void fetchNewTableData(TableStatus newTableStatus, String personId) {
+        try {
+            Person person = Person.fromParseObject(ParseQuery.getQuery(Person.TABLE_NAME).get(personId));
+            if (TableStatus.EMPTY.equals(newTableStatus)) {
+                displayTableChanged(String.format("%s %s has just released a table!", person.getFirstName(), person.getLastName()), R.color.status_empty);
+            } else if (TableStatus.BOOKED.equals(newTableStatus)) {
+                displayTableChanged(String.format("%s %s has just booked a table!", person.getFirstName(), person.getLastName()), R.color.status_booked);
+            } else if (TableStatus.OCCUPIED.equals(newTableStatus)) {
+                displayTableChanged(String.format("%s %s has just occupied a table!", person.getFirstName(), person.getLastName()), R.color.status_occupied);
+            }
+        } catch (ParseException e) {
+            LOGE(FloorActivity.class.getSimpleName(), e.getLocalizedMessage(), e);
+        }
+    }
+
+    @UiThread
+    void displayTableChanged(String message, int colorResId) {
+        Style.Builder builder = new Style.Builder();
+        builder.setBackgroundColor(colorResId);
+        Crouton.makeText(this, message, builder.build()).show();
     }
 
     public void addDeskView(Table table, float imageWidth, int originX, int originY) {
@@ -135,7 +192,6 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
         TableView tableView = (TableView) view;
         Table table = (Table) tableView.getTag();
         float ratio = imageWidth / 1267.0f;
-        ;
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.width = Math.round(tableView.intialWeight * ratio);
         params.height = Math.round((tableView.intialHeight * ratio));

@@ -35,7 +35,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.cavemen.inception.ui.FloorActivity_" />
+        <activity
+            android:name="com.cavemen.inception.ui.FloorActivity_"
+            android:launchMode="singleTask" />
         <activity
             android:name="com.cavemen.inception.nfc.CavemenNFCReaderActivity"
             android:label="@string/nfc_mode" />
