@@ -69,7 +69,11 @@ public class TableDialogFragment extends DialogFragment {
     @AfterViews
     public void afterViews(){
         mFullName.setText(mPerson.getFirstName()+ " " + mPerson.getLastName());
-        //mPhone.setText(mPerson.getPersonalPhone());
+        mPhone.setText(mPerson.getPhone());
+        mManager.setText(mPerson.getLineManager());
+        mGender.setText(mPerson.getGender());
+        mEmail.setText(mPerson.getEmail());
+        mBirthday.setText(mPerson.getBirthday());
         mJobTitle.setText(mPerson.getJobTitle());
         Picasso.with(getActivity()).load(mPerson.getPhotoUri()).into(imageView);
     }
