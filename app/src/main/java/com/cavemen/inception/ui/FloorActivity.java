@@ -186,8 +186,18 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
 
     @Background
     public void getPerson(Table table) {
-        Person person = dao.getPersonsForTable(table).get(0);
-        showPersonDialog(person, table);
+        List<Person> persons = dao.getPersonsForTable(table);
+        if (!persons.isEmpty()) {
+            showPersonDialog(persons.get(0), table);
+        } else {
+            table.setStatus(TableStatus.EMPTY);
+            noPersonsFound(table);
+        }
+    }
+    @UiThread
+    public void noPersonsFound(Table table) {
+        progressBar.setVisibility(View.GONE);
+        showDialog(table);
     }
 
     @UiThread

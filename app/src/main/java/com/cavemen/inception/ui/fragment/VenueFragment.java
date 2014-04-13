@@ -61,6 +61,7 @@ public class VenueFragment extends Fragment {
         empty.setLayoutResource(R.layout.empty_floors);
         list.setEmptyView(empty);
         list.setAdapter(floorsAdapter);
+        list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 
 
@@ -112,6 +113,7 @@ public class VenueFragment extends Fragment {
         // Notify the parent activity of selected item
         currentFloorIndex = position;
         list.setSelection(position);
+        list.setItemChecked(position,true);
         EventBus.getDefault().post(new FloorSelectedEvent(floorsAdapter.getItem(position)));
         // Set the item as checked to be highlighted
         floorsAdapter.notifyDataSetChanged();
