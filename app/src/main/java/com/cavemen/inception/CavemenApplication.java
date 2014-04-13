@@ -5,10 +5,12 @@ import android.os.AsyncTask;
 
 import com.cavemen.inception.model.Person;
 import com.cavemen.inception.model.Project;
+import com.cavemen.inception.ui.FloorActivity;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.PushService;
 
 import static com.cavemen.inception.util.LogUtils.LOGE;
 
@@ -21,6 +23,7 @@ public class CavemenApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Parse.initialize(this, "X7woT6Y1lWzo9LWvVGTLalqEyHueHiz10XP5iwaa", "2nDd05km9XcNmHZShR7GZNOkpgOsOFs7CVwk7LGe");
+        PushService.setDefaultPushCallback(this, FloorActivity.class);
 //        new Mapper().execute();
     }
 

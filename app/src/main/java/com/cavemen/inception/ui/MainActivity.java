@@ -14,6 +14,7 @@ import com.cavemen.inception.ui.adapter.BUnitsAdapter;
 import com.cavemen.inception.ui.fragment.FloorDescriptionFragment;
 import com.cavemen.inception.ui.fragment.VenueFragment;
 import com.cavemen.inception.util.UIUtils;
+import com.parse.ParsePush;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -25,10 +26,14 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+
+import static com.cavemen.inception.util.LogUtils.LOGE;
 
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.main)

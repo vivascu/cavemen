@@ -3,6 +3,10 @@ package com.cavemen.inception.ui;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -12,26 +16,29 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.cavemen.inception.R;
-import com.cavemen.inception.model.Floor;
+import com.cavemen.inception.model.CavemenDAO;
 import com.cavemen.inception.model.Table;
 import com.cavemen.inception.model.TableStatus;
 import com.cavemen.inception.ui.fragment.TableDialogFragment_;
 import com.cavemen.inception.ui.view.TableView;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.ParsePush;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
+
+import static com.cavemen.inception.util.LogUtils.LOGD;
 
 /**
  * Created by vivascu on 4/12/2014.
@@ -39,6 +46,8 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 @EActivity(R.layout.floor_fragment_layout)
 public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnMatrixChangedListener, View.OnClickListener {
 
+    @Bean
+    CavemenDAO dao;
 
     @Extra
     String floorId;
@@ -53,7 +62,6 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
     RectF mRect;
     View previouslyActivatedView;
 
-
     @AfterViews
     public void afterView() {
         Drawable bitmap = getResources().getDrawable(R.drawable.caveplan);
@@ -65,21 +73,9 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
 
     @Background
     public void getTables() {
-        ParseObject floorObject = null;
-        List<Table> tables = new ArrayList<Table>();
-        try {
-            floorObject = ParseQuery.getQuery(Floor.TABLE_NAME).get(floorId);
-            ParseQuery<ParseObject> tablesQuery = ParseQuery.getQuery(Table.TABLE_NAME);
-            tablesQuery.whereEqualTo(Table.COLUMN_FLOOR, floorObject);
-            for (ParseObject table : tablesQuery.find()) {
-                tables.add(Table.fromParseObject(table));
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } finally {
-            mTables = tables;
-            drawTables(tables);
-        }
+        List<Table> tables = dao.getTablesForFloorId(floorId);
+        mTables = tables;
+        drawTables(tables);
     }
 
     @UiThread
@@ -94,7 +90,6 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
         super.onCreate(savedInstanceState);
 
     }
-
 
     public void addDeskView(Table table, float imageWidth, int originX, int originY) {
         float ratio;
@@ -183,5 +178,13 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
         // Create and show the dialog.
         DialogFragment newFragment = TableDialogFragment_.builder().mTable(table).build();
         newFragment.show(ft, "dialog");
+    }
+
+    public class UpdatesReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LOGD(UpdatesReceiver.class.getSimpleName(), "got update!");
+        }
     }
 }
