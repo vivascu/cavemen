@@ -5,4 +5,7 @@
         <attr name="state_booked" format="boolean" />
         <attr name="state_occupied" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="AnimatedCaveman">
+        <attr name="src" format="reference"/>
+    </declare-styleable>
 </resources>

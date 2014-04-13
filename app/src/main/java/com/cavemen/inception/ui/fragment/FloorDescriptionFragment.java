@@ -1,7 +1,7 @@
 package com.cavemen.inception.ui.fragment;
 
 import android.app.Fragment;
-import android.media.Image;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewStub;
@@ -72,6 +72,8 @@ public class FloorDescriptionFragment extends Fragment {
         projectList.setAdapter(projectAdapter);
         empty.setLayoutResource(R.layout.empty_projects);
         projectList.setEmptyView(empty);
+        cavemanLogo.setBackgroundResource(R.drawable.caveman_progress);
+        ((AnimationDrawable)cavemanLogo.getBackground()).start();
     }
 
     @Override
@@ -89,6 +91,7 @@ public class FloorDescriptionFragment extends Fragment {
 
     public void onEvent(FloorSelectedEvent event) {
         cavemanLogo.setVisibility(View.VISIBLE);
+        ((AnimationDrawable)cavemanLogo.getBackground()).start();
         contentContainer.setVisibility(View.GONE);
         currentFloor = event.getFloor();
         floorNameField.setText("Floor " + currentFloor.getNumber() + " (" + currentFloor.getName() + ")");

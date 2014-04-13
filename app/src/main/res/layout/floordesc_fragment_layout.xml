@@ -3,25 +3,23 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/plain_white"
+    android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin">
-
 
     <ImageView
         android:id="@+id/cavemanLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/cavemen"
         android:contentDescription="@string/cavemen_logo"
         android:layout_gravity="center" />
 
     <LinearLayout
         android:id="@+id/contentContainer"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/floorNameField"
