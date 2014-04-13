@@ -13,4 +13,10 @@
         android:layout_height="wrap_content"
         android:contentDescription="Cave Plan"
         android:src="@drawable/caveplan" />
+    <ProgressBar
+        android:id="@+id/progress"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
 </FrameLayout>

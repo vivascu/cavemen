@@ -3,12 +3,14 @@ package com.cavemen.inception.model;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
+import java.io.Serializable;
+
 /**
  * Represents an employee.
  * <p/>
  * Created by eandreevici on 4/12/2014.
  */
-public class Person {
+public class Person implements Serializable{
 
     public static final String TABLE_NAME = "Person";
 
@@ -20,6 +22,7 @@ public class Person {
     public static final String COLUMN_TABLE_TOKEN = "tableToken";
     public static final String COLUMN_TABLE = "table";
     public static final String COLUMN_LOGIN = "login";
+    private static final long serialVersionUID = -4241661417062206800L;
 
     private String id;
     private String firstName;

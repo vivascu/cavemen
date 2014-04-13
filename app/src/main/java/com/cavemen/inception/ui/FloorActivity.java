@@ -10,9 +10,12 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.cavemen.inception.R;
+import com.cavemen.inception.model.CavemenDAO;
 import com.cavemen.inception.model.Floor;
+import com.cavemen.inception.model.Person;
 import com.cavemen.inception.model.Table;
 import com.cavemen.inception.model.TableStatus;
 import com.cavemen.inception.ui.fragment.TableDialogFragment_;
@@ -23,6 +26,7 @@ import com.parse.ParseQuery;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
@@ -45,9 +49,14 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
 
     @ViewById(R.id.caveplan)
     ImageView imageView;
+    @ViewById(R.id.progress)
+    ProgressBar progressBar;
     @ViewById(R.id.table_container)
     FrameLayout container;
     PhotoViewAttacher mAttacher;
+
+    @Bean
+    CavemenDAO dao;
 
     List<Table> mTables = new ArrayList<Table>();
     RectF mRect;
@@ -61,10 +70,12 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
         mAttacher = new PhotoViewAttacher(imageView);
         mAttacher.setOnMatrixChangeListener(this);
         getTables();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Background
     public void getTables() {
+
         ParseObject floorObject = null;
         List<Table> tables = new ArrayList<Table>();
         try {
@@ -84,6 +95,7 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
 
     @UiThread
     public void drawTables(List<Table> list) {
+        progressBar.setVisibility(View.GONE);
         if (mRect != null) {
             onMatrixChanged(mRect);
         }
@@ -160,12 +172,36 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
                 }
                 previouslyActivatedView = view;
             }
-
-
-            showDialog(table);
+            if (!TableStatus.EMPTY.equals(table.getStatus())) {
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.bringToFront();
+                getPerson(table);
+            } else {
+                showDialog(table);
+            }
             view.setActivated(!view.isActivated());
 
         }
+    }
+
+    @Background
+    public void getPerson(Table table) {
+        Person person = dao.getPersonsForTable(table).get(0);
+        showPersonDialog(person, table);
+    }
+
+    @UiThread
+    public void showPersonDialog(Person person, Table table) {
+        progressBar.setVisibility(View.GONE);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        DialogFragment newFragment = TableDialogFragment_.builder().mTable(table).mPerson(person).build();
+        newFragment.show(ft, "dialog");
     }
 
     void showDialog(Table table) {
