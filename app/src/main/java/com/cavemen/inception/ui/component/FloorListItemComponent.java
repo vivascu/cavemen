@@ -31,6 +31,7 @@ public class FloorListItemComponent extends FrameLayout {
 
     public FloorListItemComponent(Context context) {
         super(context);
+        this.setBackgroundResource(R.drawable.floor_selector);
     }
 
 

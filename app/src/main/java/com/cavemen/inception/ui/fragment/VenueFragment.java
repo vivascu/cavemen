@@ -111,6 +111,7 @@ public class VenueFragment extends Fragment {
     public void listItemClicked(int position) {
         // Notify the parent activity of selected item
         currentFloorIndex = position;
+        list.setSelection(position);
         EventBus.getDefault().post(new FloorSelectedEvent(floorsAdapter.getItem(position)));
         // Set the item as checked to be highlighted
         floorsAdapter.notifyDataSetChanged();

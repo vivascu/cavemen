@@ -120,13 +120,17 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/text_vertical_spacing"
             android:text="@string/project_label_text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/bright_blue"
+            android:textStyle="bold"
+            android:gravity="center"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/text_vertical_spacing"
-            android:background="@color/secondary_gray" />
+            android:background="@color/light_gray" />
 
         <ListView
             android:id="@+id/projectList"
