@@ -94,34 +94,36 @@ public class FloorActivity extends BaseActivity implements PhotoViewAttacher.OnM
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent().getAction() != null) {
-            processPush(getIntent());
-        }
+        processPush(getIntent(), false);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         LOGD(FloorActivity.class.getSimpleName(), "got updated");
-        processPush(intent);
+        processPush(intent, true);
     }
 
-    private void processPush(Intent intent) {
-        try {
-            JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
-            floorId = json.getString("floorId");
-            String personId = json.getString("personId");
-            TableStatus newTableStatus = TableStatus.values()[json.getInt("tableStatus")];
-            fetchNewTableData(newTableStatus, personId);
-            for (int i = 0; i < container.getChildCount(); i++) {
-                View view = container.getChildAt(i);
-                if (view.getId() != R.id.caveplan && view instanceof TableView) {
-                    container.removeView(view);
+    private void processPush(Intent intent, boolean redrawData) {
+        if (intent.getExtras() != null && intent.getExtras().containsKey("com.parse.Data")) {
+            try {
+                JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
+                floorId = json.getString("floorId");
+                String personId = json.getString("personId");
+                TableStatus newTableStatus = TableStatus.values()[Integer.parseInt(json.getString("newTableStatus"))];
+                fetchNewTableData(newTableStatus, personId);
+                if (redrawData) {
+                    for (int i = 0; i < container.getChildCount(); i++) {
+                        View view = container.getChildAt(i);
+                        if (view.getId() != R.id.caveplan && view instanceof TableView) {
+                            container.removeView(view);
+                        }
+                    }
+                    getTables();
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            getTables();
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 
